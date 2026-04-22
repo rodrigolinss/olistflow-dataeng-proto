@@ -1,0 +1,48 @@
+# Artefatos gerados localmente que não devem ir pro repositório público
+# (Parte 2 pode adicionar mais quando o código entrar)
+
+# Segredos e configuração local
+.env
+.env.local
+*.pem
+*.key
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python (reservado para Parte 2)
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# dbt (reservado para Parte 2)
+target/
+dbt_packages/
+logs/
+.user.yml
+
+# Dados (reservado para Parte 2)
+data/
+*.parquet
+*.duckdb
+*.db
+
+# Docker (reservado para Parte 2)
+.docker/

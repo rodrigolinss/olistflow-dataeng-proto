@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OlistFlow — Protótipo de Ciclo de Vida de Engenharia de Dados</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme">
+
+    <style>
+        :root {
+            --accent: #ffd166;
+            --accent-2: #06d6a0;
+            --accent-3: #ef476f;
+            --text: #f8f9fa;
+            --muted: #adb5bd;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        .reveal { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; }
+        .reveal h1, .reveal h2, .reveal h3 { color: var(--accent); font-weight: 700; text-transform: none; letter-spacing: -0.01em; }
+        .reveal h1 { font-size: 2.4em; }
+        .reveal h2 { font-size: 1.6em; margin-bottom: 0.6em; }
+        .reveal h3 { font-size: 1.1em; color: var(--accent-2); }
+        .reveal section { text-align: left; }
+        .reveal section.center { text-align: center; }
+        .reveal .slide-number { font-size: 14px; color: var(--muted); }
+
+        .tagline { color: var(--muted); font-size: 0.7em; font-weight: 400; display: block; margin-top: 0.3em; }
+
+        .meta-row { display: flex; gap: 1.5em; justify-content: center; margin-top: 2em; color: var(--muted); font-size: 0.6em; }
+        .meta-row span { border-left: 2px solid var(--accent); padding-left: 0.8em; }
+        .meta-row span:first-child { border-left: none; padding-left: 0; }
+
+        .badge {
+            display: inline-block; padding: 4px 12px; border-radius: 12px;
+            font-size: 0.45em; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+            background: rgba(255, 209, 102, 0.15); color: var(--accent); border: 1px solid rgba(255, 209, 102, 0.3);
+            margin-bottom: 1em;
+        }
+
+        .reveal table {
+            font-size: 0.55em; width: 100%; margin: 0.5em 0;
+            border-collapse: collapse; border-spacing: 0;
+        }
+        .reveal table th {
+            color: var(--accent); border-bottom: 2px solid var(--accent);
+            padding: 0.6em 0.8em; text-align: left; font-weight: 600;
+        }
+        .reveal table td {
+            padding: 0.5em 0.8em; border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .reveal table tr:hover td { background: var(--card-bg); }
+
+        .reveal ul, .reveal ol { display: block; margin-left: 1em; }
+        .reveal li { margin: 0.3em 0; line-height: 1.5; }
+        .reveal li strong { color: var(--accent); }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em; margin-top: 1em; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em; margin-top: 1em; }
+
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+            padding: 1em 1.2em;
+        }
+        .card h3 { margin: 0 0 0.5em 0; font-size: 0.9em; }
+        .card p { margin: 0; font-size: 0.65em; color: var(--muted); line-height: 1.5; }
+
+        .stat {
+            background: linear-gradient(135deg, rgba(255, 209, 102, 0.08), rgba(6, 214, 160, 0.08));
+            border-radius: 12px; padding: 1.2em; text-align: center; border: 1px solid var(--border);
+        }
+        .stat .big { font-size: 2.5em; color: var(--accent); font-weight: 700; display: block; }
+        .stat .lbl { font-size: 0.55em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+        .bullet-lg { font-size: 0.85em; line-height: 1.7; }
+        .bullet-lg li { padding-left: 0.3em; }
+
+        .highlight { color: var(--accent); font-weight: 600; }
+        .highlight-green { color: var(--accent-2); font-weight: 600; }
+        .highlight-red { color: var(--accent-3); font-weight: 600; }
+
+        .callout {
+            border-left: 4px solid var(--accent);
+            padding: 0.8em 1.2em; margin: 1em 0;
+            background: var(--card-bg); font-size: 0.8em; font-style: italic;
+        }
+
+        .mermaid-container {
+            background: #1a1a2e; border-radius: 8px; padding: 1em;
+            max-height: 520px; overflow: auto; display: flex; justify-content: center;
+        }
+        .mermaid { font-size: 14px !important; }
+
+        .footer-bar {
+            position: fixed; bottom: 12px; left: 20px; right: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 12px; color: var(--muted); z-index: 30;
+            pointer-events: none;
+        }
+        .footer-bar .brand { color: var(--accent); font-weight: 600; }
+        .footer-bar .detail { font-family: 'SF Mono', Menlo, Consolas, monospace; }
+
+        .two-col-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; }
+        .compare-box { border: 1px solid var(--border); border-radius: 8px; padding: 1em; background: var(--card-bg); }
+        .compare-box.good { border-color: rgba(6, 214, 160, 0.4); }
+        .compare-box.limit { border-color: rgba(239, 71, 111, 0.4); }
+        .compare-box h3 { font-size: 0.85em; margin-top: 0; }
+        .compare-box.good h3 { color: var(--accent-2); }
+        .compare-box.limit h3 { color: var(--accent-3); }
+        .compare-box ul { font-size: 0.7em; margin-left: 0.8em; }
+
+        .ondas {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.6em;
+            margin: 1em 0;
+        }
+        .onda {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+            padding: 0.8em 0.5em; font-size: 0.55em; text-align: center;
+        }
+        .onda .num { display: block; font-size: 1.5em; color: var(--accent); font-weight: 700; margin-bottom: 0.3em; }
+        .onda .tit { color: var(--text); font-weight: 600; margin-bottom: 0.3em; }
+        .onda .des { color: var(--muted); font-size: 0.9em; line-height: 1.3; }
+
+        .qr-placeholder {
+            display: inline-block; padding: 1.5em 2em; border-radius: 8px;
+            background: var(--card-bg); border: 1px dashed var(--border);
+            font-family: monospace; color: var(--accent);
+        }
+
+        /* print tweaks for PDF export */
+        @media print {
+            .mermaid-container { max-height: none; }
+            .footer-bar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="footer-bar">
+    <span class="brand">OlistFlow</span>
+    <span class="detail">Engenharia de Dados · Parte 1 · 30/04/2026</span>
+</div>
+
+<div class="reveal">
+    <div class="slides">
+
+        <!-- ========== SLIDE 1 — CAPA ========== -->
+        <section class="center" data-background-gradient="radial-gradient(circle at 30% 30%, #1a1a2e 0%, #0d0d15 100%)">
+            <span class="badge">1ª Avaliação · Engenharia de Dados</span>
+            <h1 style="font-size: 3em; margin-bottom: 0.2em;">OlistFlow</h1>
+            <p style="color: var(--accent-2); font-size: 1.2em; margin: 0;">Protótipo de Ciclo de Vida de Engenharia de Dados</p>
+            <p class="tagline">Planejamento e Desenho Arquitetural · Parte 1 de 2</p>
+            <div class="meta-row">
+                <span><strong>Dupla:</strong> Integrante A · Integrante B</span>
+                <span><strong>Apresentação:</strong> 30/04/2026</span>
+            </div>
+            <aside class="notes">
+                Cumprimentar a turma. Falar em 30 segundos: "somos a dupla A+B e vamos apresentar o OlistFlow, nosso protótipo de pipeline para um marketplace brasileiro de e-commerce. Antes de mergulhar na arquitetura, deixa a gente te convencer de que o problema vale a pena."
+            </aside>
+        </section>
+
+        <!-- ========== SLIDE 2 — O PROBLEMA ========== -->
+        <section>
+            <h2>Por que um marketplace brasileiro?</h2>
+            <div class="grid-2" style="margin-top: 1.5em;">
+                <div>
+                    <div class="stat" style="margin-bottom: 1em;">
+                        <span class="big">R$ 185 bi</span>
+                        <span class="lbl">E-commerce Brasil · 2024</span>
+                    </div>
+                    <p style="font-size: 0.7em; color: var(--muted); margin: 0;">Marketplaces multivendedor concentram a <span class="highlight">maior complexidade de dados</span>: cada pedido envolve cliente, vendedor, meio de pagamento, operador logístico — em todos os estados, com ciclos longos de compra até avaliação.</p>
+                </div>
+                <div>
+                    <h3 style="margin-top: 0;">Três dores recorrentes</h3>
+                    <ul style="font-size: 0.75em;">
+                        <li><strong>Visão fragmentada</strong><br><span style="color: var(--muted); font-size: 0.85em;">cada equipe consulta uma fonte diferente</span></li>
+                        <li><strong>Decisões lentas</strong><br><span style="color: var(--muted); font-size: 0.85em;">sem camada analítica, "qual categoria cresceu?" leva dias</span></li>
+                        <li><strong>Sinais perdidos</strong><br><span style="color: var(--muted); font-size: 0.85em;">eventos de navegação nunca cruzam com pós-compra</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="callout" style="margin-top: 1.5em;">
+                O OlistFlow ataca essas três dores com um pipeline end-to-end unificando dados operacionais (batch) e comportamentais (streaming).
+            </div>
+            <aside class="notes">
+                Contextualizar sem jargão. Tempo: 1,5 min. Frase-âncora: "marketplaces são complexos porque os dados nascem dispersos em sistemas desacoplados e ninguém tem a visão completa da jornada."
+            </aside>
+        </section>
+
+        <!-- ========== SLIDE 3 — DADOS ========== -->
+        <section>
+            <h2>Dois tipos de dados, duas histórias</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Dimensão</th>
+                        <th style="width: 40%; color: var(--accent-2);">📦 Batch (Operacional)</th>
+                        <th style="width: 40%; color: var(--accent);">⚡ Streaming (Comportamento)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Fonte</strong></td>
+                        <td>PostgreSQL simulando ERP<br><span style="color: var(--muted);">Dataset Olist — 9 tabelas reais</span></td>
+                        <td>Simulador Python → Redis Streams<br><span style="color: var(--muted);">Fallback: JSONL em disco</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Formato</strong></td>
+                        <td>Tabelas relacionais → Parquet</td>
+                        <td>Eventos JSON → Parquet</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Volume</strong></td>
+                        <td>~1,5 M linhas · 45 MB</td>
+                        <td>~50 k eventos/dia · 5 MB/dia</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Frequência</strong></td>
+                        <td>Diária (D-1, noturno)</td>
+                        <td>Contínua, micro-batch 5 min</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Latência SLA</strong></td>
+                        <td>Dashboard até 6h depois</td>
+                        <td>≤ 5 minutos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Exemplos</strong></td>
+                        <td>Pedidos, pagamentos, avaliações, cadastros</td>
+                        <td>page_view, search, add_to_cart, checkout_abandon</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="font-size: 0.65em; color: var(--muted); margin-top: 0.8em; text-align: center;">
+                <em>Tratamos os dois porque contam histórias diferentes da mesma jornada.</em>
+            </p>
+            <aside class="notes">
+                Tempo: 2,5 min. Focar na dicotomia: batch = estado do negócio; streaming = comportamento do usuário. Destacar que a gente usa dataset público REAL (Olist) e simula eventos porque não existe clickstream público acoplado.
+            </aside>
+        </section>
+
+        <!-- ========== SLIDE 4 — DOMÍNIOS ========== -->
+        <section>
+            <h2>6 Domínios + Serviços Compartilhados</h2>
+            <div class="mermaid-container" style="max-height: 460px;">
+                <pre class="mermaid">
+flowchart TB
+    subgraph SHARED["🔧 Serviços Compartilhados"]
+        SH1[Bronze Raw Store]
+        SH2[Airflow]
+        SH3[dbt docs]
+        SH4[Qualidade]
+        SH5[Metabase]
+    end
+
+    V["💰 Vendas<br/>Pedidos · Itens · Pagamentos"]
+    C["📦 Catálogo<br/>Produtos · Categorias"]
+    U["👤 Clientes<br/>Cadastro · Reviews · RFM"]
+    L["🚚 Logística<br/>Entregas · Geo · SLA"]
+    M["📣 Marketing<br/>Eventos · Funil · Sessões"]
+    S["🏪 Sellers<br/>Vendedores · Scorecards"]
+
+    V --> SHARED
+    C --> SHARED
+    U --> SHARED
+    L --> SHARED
+    M --> SHARED
+    S --> SHARED
+
+    V -.reusa.-> C
+    V -.reusa.-> U
+    L -.reusa.-> U
+    M -.via order_id.-> V
+
+    classDef dom fill:#1e3a5f,stroke:#4a90e2,stroke-width:2px,color:#fff
+    classDef sh fill:#4a3f1f,stroke:#ffd166,stroke-width:2px,color:#fff
+    class V,C,U,L,M,S dom
+    class SHARED sh
+                </pre>
+            </div>
+            <p style="font-size: 0.6em; color: var(--muted); margin-top: 0.8em;">
+                <span class="highlight">DDD aplicado:</span> cada domínio tem ownership claro. Dimensões conformadas (<code>dim_clientes</code>) são reusadas em múltiplos domínios — reuso sem duplicação, princípio de Kimball.
+            </p>
+            <aside class="notes">
+                Tempo: 2,5 min. Destacar: (1) organização espelha times reais de marketplace; (2) conformed dimensions como exemplo de reuso; (3) preparação pra eventual Data Mesh sem precisar redesenhar.
+            </aside>
+        </section>
+
+        <!-- ========== SLIDE 5 — ARQUITETURA (FLUXO) ========== -->
+        <section>
+            <h2>Arquitetura Medalhão + Lambda light</h2>
+            <div class="mermaid-container" style="max-height: 480px;">
+                <pre class="mermaid">
+flowchart LR
+    ERP[(Postgres<br/>Olist ERP)] --> B1[Python + pyarrow<br/>batch diário]
+    EVT[Simulador<br/>clickstream] --> B2[Redis Streams<br/>+ consumer 5min]
+
+    B1 --> BR1["🥉 Bronze<br/>parquet particionado"]
+    B2 --> BR2["🥉 Bronze<br/>events/dt=/hr="]
+
+    BR1 --> SV["🥈 Silver<br/>stg_* · int_*<br/>limpeza · joins"]
+    BR2 --> SV
+
+    SV --> GD["🥇 Gold<br/>fct_pedidos · fct_funil<br/>dim_clientes · dim_produtos"]
+
+    GD --> MB[Metabase<br/>Dashboards]
+    GD --> API[FastAPI<br/>opcional]
+
+    AF((Airflow<br/>orquestra tudo)) -.-> B1
+    AF -.-> B2
+    AF -.-> SV
+    AF -.-> GD
+
+    DBT[dbt tests<br/>Great Expectations] -.valida.-> SV
+    DBT -.valida.-> GD
+
+    classDef src fill:#5a1e2a,stroke:#ef476f,color:#fff
+    classDef bronze fill:#663b18,stroke:#cd7f32,color:#fff
+    classDef silver fill:#444,stroke:#aaa,color:#fff
+    classDef gold fill:#665020,stroke:#ffd166,color:#fff
+    classDef serve fill:#1e4a38,stroke:#06d6a0,color:#fff
+    classDef orch fill:#3a2a4a,stroke:#b19cd9,color:#fff
+    classDef qual fill:#1e3a4a,stroke:#4aa3df,color:#fff
+
+    class ERP,EVT src
+    class BR1,BR2 bronze
+    class SV silver
+    class GD gold
+    class MB,API serve
+    class AF orch
+    class DBT qual
+                </pre>
+            </div>
+            <p style="font-size: 0.65em; text-align: center; margin-top: 0.6em;">
+                <span class="highlight-green">Bronze</span> captura · <span class="highlight" style="color: #c0c0c0;">Silver</span> limpa · <span class="highlight">Gold</span> modela · cada transição tem contrato claro
+            </p>
+            <aside class="notes">
+                Tempo: 3,5 min. Coração da apresentação. Explicar: (1) Bronze é imutável = reversibilidade; (2) Silver aplica cast, dedup, validação; (3) Gold é modelo dimensional (Kimball); (4) Airflow coordena; (5) testes dbt+GE validam automaticamente.
+            </aside>
+        </section>
+
+        <!-- ========== SLIDE 6 — POR QUE MEDALHÃO ========== -->
+        <section>
+            <h2>Por que Medalhão e não outras?</h2>
+            <table style="font-size: 0.5em;">
+                <thead>
+                    <tr><th>Arquitetura</th><th>Por que não ganhou</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Data Warehouse puro</strong></td><td>Carrega dados já transformados — perde raw, não reprocessa. Inadequado para eventos semi-estruturados.</td></tr>
+                    <tr><td><strong>Data Lake puro</strong></td><td>Sem estrutura vira "pântano de dados". Não cobre confiabilidade exigida.</td></tr>
+                    <tr><td><strong>Lambda puro (Kafka + Spark)</strong></td><td>Overkill. Duas stacks completas exigem hardware inviável em contexto acadêmico.</td></tr>
+                    <tr><td><strong>Kappa puro</strong></td><td>Trata tudo como streaming. Desproporcional — maior parte dos dados é batch por natureza.</td></tr>
+                    <tr><td><strong>Data Mesh</strong></td><td>Exige múltiplos times com ownership. Uma dupla de estudantes não reproduz isso.</td></tr>
+                    <tr style="background: rgba(255, 209, 102, 0.08);"><td><strong style="color: var(--accent);">Medalhão ✅</strong></td><td><strong>Vencedor:</strong> cobre requisitos, roda em notebook, expressa princípios de camadas/acoplamento/reversibilidade.</td></tr>
+                </tbody>
+            </table>
+            <div class="grid-3" style="margin-top: 1em;">
+                <div class="card"><h3>🪶 Cabe no hardware</h3><p>DuckDB in-process · Parquet local · sem cluster</p></div>
+                <div class="card"><h3>⏪ Reversibilidade</h3><p>Bronze imutável · qualquer bug reconstrói tudo</p></div>
+                <div class="card"><h3>🚀 Migrável</h3><p>Troca DuckDB→BigQuery e Parquet→S3 sem redesenho</p></div>
+            </div>
+            <aside class="notes">
+                Essa tabela mostra que consideramos alternativas com seriedade. Destacar: Medalhão não é "escolha preguiçosa" — é equilíbrio entre literatura moderna e viabilidade. Se perguntarem "e Data Mesh?", responder: "nossa separação por domínios já prepara, é só empacotar se o projeto crescer".
+            </aside>
+        </section>
+
+        <!-- ========== SLIDE 7 — STACK ========== -->
+        <section>
+            <h2>Stack Tecnológico</h2>
+            <table style="font-size: 0.48em;">
+                <thead>
+                    <tr>
+                        <th>Etapa</th>
+                        <th>Ferramenta</th>
+                        <th>Alternativa futura (cloud)</th>
+                        <th>RAM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Ingestão batch</td><td><strong>Python + pyarrow</strong></td><td>Airbyte, Fivetran, Debezium CDC</td><td>100 MB</td></tr>
+                    <tr><td>Ingestão streaming</td><td><strong>Redis Streams</strong></td><td>Kafka MSK, Kinesis, Pub/Sub</td><td>150 MB</td></tr>
+                    <tr><td>OLTP origem</td><td><strong>PostgreSQL 16</strong></td><td>RDS, Cloud SQL</td><td>200 MB</td></tr>
+                    <tr><td>Data Lake</td><td><strong>Parquet + diretórios</strong></td><td>S3, GCS, Azure Blob</td><td>0</td></tr>
+                    <tr><td>Engine analítica</td><td><strong>DuckDB</strong></td><td>BigQuery, Snowflake, Athena</td><td>300 MB</td></tr>
+                    <tr><td>Transformação</td><td><strong>dbt-core</strong></td><td>dbt Cloud</td><td>50 MB</td></tr>
+                    <tr><td>Orquestração</td><td><strong>Apache Airflow</strong></td><td>MWAA, Cloud Composer</td><td>800 MB</td></tr>
+                    <tr><td>BI / Dashboards</td><td><strong>Metabase</strong></td><td>Looker, Power BI</td><td>800 MB</td></tr>
+                    <tr><td>Qualidade</td><td><strong>dbt tests + Great Expectations</strong></td><td>Soda, Monte Carlo</td><td>100 MB</td></tr>
+                    <tr style="background: rgba(6, 214, 160, 0.08);"><td colspan="3" style="text-align: right;"><strong>Total estimado em RAM:</strong></td><td><strong style="color: var(--accent-2);">~2,6 GB</strong></td></tr>
+                </tbody>
+            </table>
+            <p style="font-size: 0.6em; color: var(--muted); text-align: center; margin-top: 0.8em;">
+                Cabe em notebook de 8 GB com folga para sistema + IDE + navegador. Toda a stack é <span class="highlight-green">open-source</span> — zero custo de licença.
+            </p>
+            <aside class="notes">
+                Tempo: 1,5 min. Destacar: (1) total de 2,6 GB cabe em qualquer notebook moderno; (2) todas as escolhas têm alternativa cloud 1:1 — a arquitetura é migrável. Não listar todas — fale "cada escolha tem alternativa considerada e justificada no relatório".
+            </aside>
+        </section>
+
+        <!-- ========== SLIDE 8 — 3 DECISÕES ========== -->
+        <section>
+            <h2>Três decisões não-triviais</h2>
+            <div class="grid-3" style="margin-top: 1.5em;">
+                <div class="card" style="border-color: rgba(6, 214, 160, 0.3);">
+                    <h3>🦆 DuckDB<br>sobre Spark</h3>
+                    <p style="margin-top: 0.6em;">Pra 45 MB de dados, Spark seria overkill de ordem de grandeza.</p>
+                    <p style="margin-top: 0.6em; color: var(--accent-2); font-weight: 600;">DuckDB in-process. SQL ANSI. Integração direta com dbt.</p>
+                </div>
+                <div class="card" style="border-color: rgba(255, 209, 102, 0.3);">
+                    <h3>⚡ Redis Streams<br>sobre Kafka</h3>
+                    <p style="margin-top: 0.6em;">Kafka exige ZooKeeper + brokers + 2 GB só em overhead.</p>
+                    <p style="margin-top: 0.6em; color: var(--accent); font-weight: 600;">Redis tem a mesma semântica de log imutável em 50 MB.</p>
+                </div>
+                <div class="card" style="border-color: rgba(239, 71, 111, 0.3);">
+                    <h3>🛠 dbt<br>como espinha</h3>
+                    <p style="margin-top: 0.6em;">Transforma SQL em código versionável com testes e linhagem automática.</p>
+                    <p style="margin-top: 0.6em; color: var(--accent-3); font-weight: 600;">É o padrão de mercado hoje — vale aprender.</p>
+                </div>
+            </div>
+            <div class="callout" style="margin-top: 1.5em;">
+                Cada escolha tem <strong>plano B documentado</strong> no relatório. Se Redis não rodar na sala, o simulador grava direto em JSONL — mesmo pipeline, menos infra.
+            </div>
+            <aside class="notes">
+                Tempo: 2 min. Mostrar que raciocinamos, não copiamos. Destacar o fallback do Redis → JSONL como exemplo de pragmatismo (não dogmatismo). Se perguntarem "por que não Postgres direto?": "Postgres é OLTP, não escala pra analytics columnar — DuckDB é colunar, feito pra isso."
+            </aside>
+        </section>
+
+        <!-- ========== SLIDE 9 — TRADEOFFS ========== -->
+        <section>
+            <h2>Tradeoffs honestos</h2>
+            <div class="two-col-compare" style="margin-top: 1.2em;">
+                <div class="compare-box good">
+                    <h3>✅ O que ganhamos</h3>
+                    <ul>
+                        <li><strong>Baixo acoplamento:</strong> camadas conversam via Parquet com schema contratado</li>
+                        <li><strong>Confiabilidade:</strong> dbt tests + GE bloqueiam dados inválidos</li>
+                        <li><strong>Reversibilidade:</strong> Bronze imutável permite <code>--full-refresh</code></li>
+                        <li><strong>Linhagem automática:</strong> dbt gera grafo completo</li>
+                        <li><strong>Portabilidade:</strong> mesma topologia roda em S3/BigQuery</li>
+                    </ul>
+                </div>
+                <div class="compare-box limit">
+                    <h3>⚠️ O que cedemos conscientemente</h3>
+                    <ul>
+                        <li><strong>Alta disponibilidade real:</strong> single-node, falha = downtime</li>
+                        <li><strong>Streaming industrial:</strong> Redis &lt; Kafka; volumes didáticos</li>
+                        <li><strong>RBAC granular no serving:</strong> Metabase com auth simples</li>
+                        <li><strong>Data catalog corporativo:</strong> usamos dbt docs local</li>
+                        <li><strong>Escala horizontal:</strong> DuckDB é single-node</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="font-size: 0.7em; color: var(--muted); text-align: center; margin-top: 1.2em;">
+                <em>Todas as renúncias são <span class="highlight">recuperáveis</span> em uma versão futura — sem alterar a topologia principal.</em>
+            </p>
+            <aside class="notes">
+                Tempo: 1,5 min. Honestidade vende mais que vender o produto perfeito. Deixar claro: "cedemos porque é acadêmico; em produção seria diferente — mas a arquitetura que escolhemos permite essa evolução sem redesenho."
+            </aside>
+        </section>
+
+        <!-- ========== SLIDE 10 — PARTE 2 ========== -->
+        <section>
+            <h2>Parte 2 — 5 ondas de implementação</h2>
+            <div class="ondas">
+                <div class="onda">
+                    <span class="num">1</span>
+                    <div class="tit">Fundação</div>
+                    <div class="des">docker-compose sobe stack · Postgres recebe Olist · dbt inicializado</div>
+                </div>
+                <div class="onda">
+                    <span class="num">2</span>
+                    <div class="tit">Bronze</div>
+                    <div class="des">DAG ingest_olist · simulador de eventos · Parquet particionado</div>
+                </div>
+                <div class="onda">
+                    <span class="num">3</span>
+                    <div class="tit">Silver</div>
+                    <div class="des">stg_* + int_* · cast, dedup, validação · dbt tests</div>
+                </div>
+                <div class="onda">
+                    <span class="num">4</span>
+                    <div class="tit">Gold + QA</div>
+                    <div class="des">dim_* + fct_* · snapshots SCD2 · suite Great Expectations</div>
+                </div>
+                <div class="onda">
+                    <span class="num">5</span>
+                    <div class="tit">Consumo</div>
+                    <div class="des">5 dashboards Metabase · dbt docs · CI GitHub Actions</div>
+                </div>
+            </div>
+            <h3 style="margin-top: 1.5em;">Critério de pronto</h3>
+            <ul style="font-size: 0.7em;">
+                <li>✅ <code>make up</code> sobe todo o stack em &lt; 5 min em máquina limpa</li>
+                <li>✅ <code>dbt build</code> roda do zero e passa em 100% dos testes</li>
+                <li>✅ Qualquer colega da sala consegue reproduzir em seu notebook em &lt; 30 min</li>
+            </ul>
+            <aside class="notes">
+                Tempo: 1,5 min. Mostrar que o planejamento é executável, não ficção. Destacar o último bullet: o teste final é "funciona na máquina do colega" — isso derruba projetos acadêmicos ambiciosos que só rodam na máquina do dono.
+            </aside>
+        </section>
+
+        <!-- ========== SLIDE 11 — ENCERRAMENTO ========== -->
+        <section class="center" data-background-gradient="radial-gradient(circle at 70% 70%, #1a1a2e 0%, #0d0d15 100%)">
+            <h1 style="font-size: 2.2em;">Obrigado!</h1>
+            <p style="color: var(--accent-2); font-size: 1em; margin-bottom: 1.5em;">Bora pras perguntas</p>
+
+            <div class="grid-2" style="margin-top: 1em;">
+                <div class="card">
+                    <h3>📂 Repositório público</h3>
+                    <p style="font-family: monospace; color: var(--accent); font-size: 0.75em;">github.com/rodrigolinss<br>/olistflow-dataeng-proto</p>
+                </div>
+                <div class="card">
+                    <h3>📊 Esta apresentação</h3>
+                    <p style="font-size: 0.75em;">Disponível no próprio repositório em <code>/apresentacao/</code> — também publicada via GitHub Pages.</p>
+                </div>
+            </div>
+
+            <div class="meta-row" style="margin-top: 2.5em;">
+                <span>OlistFlow</span>
+                <span>Engenharia de Dados</span>
+                <span>Parte 1 · 2026</span>
+            </div>
+
+            <aside class="notes">
+                Tempo: 30 s. Manter postura acolhedora. Se o tempo sobrar, oferecer: "podemos mostrar algum detalhe do relatório agora ou responder perguntas — como preferirem."
+            </aside>
+        </section>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+
+<script>
+    mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        themeVariables: {
+            darkMode: true,
+            background: '#1a1a2e',
+            primaryColor: '#2a3a5a',
+            primaryTextColor: '#f8f9fa',
+            primaryBorderColor: '#4a90e2',
+            lineColor: '#adb5bd',
+            secondaryColor: '#4a3f1f',
+            tertiaryColor: '#1e4a38'
+        },
+        flowchart: { curve: 'basis', padding: 12, nodeSpacing: 30, rankSpacing: 40 }
+    });
+
+    Reveal.initialize({
+        hash: true,
+        slideNumber: 'c/t',
+        transition: 'slide',
+        backgroundTransition: 'fade',
+        controls: true,
+        progress: true,
+        center: false,
+        plugins: [RevealHighlight, RevealNotes]
+    });
+
+    // Render Mermaid diagrams after reveal is initialized and on slide changes
+    Reveal.on('ready', () => { mermaid.run({ querySelector: '.mermaid' }); });
+    Reveal.on('slidechanged', () => { mermaid.run({ querySelector: '.mermaid' }); });
+</script>
+
+</body>
+</html>
