@@ -43,53 +43,53 @@ A arquitetura Medalhão é uma **concretização** de princípios vistos em aula
 flowchart LR
     subgraph SRC["🌐 Fontes de Dados"]
         direction TB
-        ERP[(PostgreSQL<br/>Olist ERP)]
-        EVT[Simulador de<br/>Clickstream]
+        ERP[("PostgreSQL 16<br/>Olist ERP<br/>~1,5M linhas")]
+        EVT["Simulador de<br/>Clickstream<br/>~50k eventos/dia"]
     end
 
     subgraph ING["📥 Ingestão"]
         direction TB
-        B1[Python + pyarrow<br/>Batch diário]
-        B2[Redis Streams<br/>+ Consumer Python<br/>Janela 5 min]
+        B1["Python + pyarrow<br/><b>@02:00 diário</b>"]
+        B2["Redis Streams<br/>+ consumer Python<br/><b>*/5 min</b>"]
     end
 
     subgraph BRONZE["🥉 BRONZE — Raw"]
         direction TB
-        BR1[Parquet<br/>olist/*/dt_ingest=YYYY-MM-DD]
-        BR2[Parquet<br/>events/dt=YYYY-MM-DD/hr=HH]
+        BR1["olist/&lt;tabela&gt;<br/>dt_ingest=YYYY-MM-DD<br/>Parquet + Snappy"]
+        BR2["events/<br/>dt=YYYY-MM-DD/hr=HH<br/>Parquet + Snappy"]
     end
 
     subgraph SILVER["🥈 SILVER — Clean & Conformed"]
         direction TB
-        S1[stg_olist_*<br/>Tipos padronizados<br/>Nulos tratados<br/>Deduplicação]
-        S2[stg_events<br/>Schema validado<br/>Sessões inferidas]
-        S3[int_* <br/>Lógica compartilhada<br/>Joins intermediários]
+        S1["stg_olist_*<br/>cast · dedup · null-handling"]
+        S2["stg_events<br/>schema validation · sessions"]
+        S3["int_*<br/>lógica compartilhada"]
     end
 
     subgraph GOLD["🥇 GOLD — Business-Ready"]
         direction TB
-        G1[fct_pedidos<br/>fct_entregas<br/>fct_funil]
-        G2[dim_clientes<br/>dim_produtos<br/>dim_vendedores<br/>dim_geo<br/>dim_tempo]
+        G1["fct_pedidos · fct_entregas<br/>fct_funil"]
+        G2["dim_clientes · dim_produtos<br/>dim_vendedores · dim_geo<br/>dim_tempo · dim_sessao"]
     end
 
     subgraph SERVE["📊 Serving"]
         direction TB
-        SV1[Metabase<br/>Dashboards]
-        SV2[FastAPI<br/>Endpoints opcionais]
+        SV1["Metabase<br/>5 dashboards"]
+        SV2["FastAPI<br/><i>opcional</i>"]
     end
 
     subgraph ORCH["⚙️ Orquestração"]
-        O1[Apache Airflow<br/>DAGs por domínio]
+        O1["Apache Airflow<br/>LocalExecutor"]
     end
 
     subgraph QUAL["🔬 Qualidade & Governança"]
-        Q1[dbt tests]
-        Q2[Great Expectations]
-        Q3[dbt docs<br/>Catálogo + Linhagem]
+        Q1["dbt tests"]
+        Q2["Great Expectations"]
+        Q3["dbt docs<br/>catálogo + linhagem"]
     end
 
-    ERP --> B1 --> BR1
-    EVT --> B2 --> BR2
+    ERP -->|"SELECT · JDBC"| B1 --> BR1
+    EVT -->|"XADD"| B2 --> BR2
     BR1 --> S1
     BR2 --> S2
     S1 --> S3
@@ -101,11 +101,12 @@ flowchart LR
     G1 --> SV2
     G2 --> SV2
 
-    O1 -.coordena.-> ING
-    O1 -.coordena.-> SILVER
-    O1 -.coordena.-> GOLD
-    QUAL -.valida.-> SILVER
-    QUAL -.valida.-> GOLD
+    O1 -. "schedule @02:00" .-> B1
+    O1 -. "schedule */5min" .-> B2
+    O1 -. "dbt run" .-> SILVER
+    O1 -. "dbt run" .-> GOLD
+    QUAL -. "bloqueia inválidos" .-> SILVER
+    QUAL -. "bloqueia inválidos" .-> GOLD
 
     classDef srcStyle fill:#fde2e4,stroke:#c9184a,stroke-width:2px
     classDef ingStyle fill:#fff0c9,stroke:#dc8a00,stroke-width:2px
@@ -125,6 +126,8 @@ flowchart LR
     class ORCH orchStyle
     class QUAL qualStyle
 ```
+
+> Para versões complementares deste fluxo (DAGs Airflow, DFD por domínio e topologia Docker), ver **[07-diagrama-processamento.md](07-diagrama-processamento.md)**.
 
 ## Descrição do fluxo por etapa
 

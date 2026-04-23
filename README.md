@@ -22,6 +22,7 @@ O cenário escolhido simula um marketplace no estilo **Olist / Mercado Livre**, 
 | 4.4 | [04-arquitetura.md](docs/04-arquitetura.md) | Arquitetura Medalhão + Lambda light, fluxo ponta-a-ponta, tradeoffs |
 | 4.5 | [05-tecnologias.md](docs/05-tecnologias.md) | Stack por etapa do ciclo de vida com justificativas |
 | 4.6 | [06-consideracoes.md](docs/06-consideracoes.md) | Riscos, próximos passos para Parte 2, referências |
+| 4.7 | [07-diagrama-processamento.md](docs/07-diagrama-processamento.md) | Diagramas profissionais: end-to-end, DAGs Airflow, DFD por domínio, deployment Docker (Mermaid + PNG/SVG) |
 | — | [apresentacao/roteiro.md](apresentacao/roteiro.md) | Divisão de fala da dupla e tempo por tópico |
 | — | [apresentacao/index.html](apresentacao/index.html) | **Slides HTML interativos** (reveal.js + Mermaid) |
 

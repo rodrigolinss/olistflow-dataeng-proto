@@ -297,27 +297,27 @@ flowchart TB
             <div class="mermaid-container" style="max-height: 480px;">
                 <pre class="mermaid">
 flowchart LR
-    ERP[(Postgres<br/>Olist ERP)] --> B1[Python + pyarrow<br/>batch diário]
-    EVT[Simulador<br/>clickstream] --> B2[Redis Streams<br/>+ consumer 5min]
+    ERP[("Postgres<br/>Olist ERP")] -->|"SELECT · JDBC"| B1["Python + pyarrow<br/><b>@02:00 diário</b>"]
+    EVT["Simulador<br/>clickstream"] -->|"XADD"| B2["Redis Streams<br/>+ consumer<br/><b>*/5 min</b>"]
 
-    B1 --> BR1["🥉 Bronze<br/>parquet particionado"]
+    B1 --> BR1["🥉 Bronze<br/>parquet particionado<br/>dt_ingest=YYYY-MM-DD"]
     B2 --> BR2["🥉 Bronze<br/>events/dt=/hr="]
 
-    BR1 --> SV["🥈 Silver<br/>stg_* · int_*<br/>limpeza · joins"]
+    BR1 --> SV["🥈 Silver<br/>stg_* · int_*<br/>cast · dedup · joins"]
     BR2 --> SV
 
     SV --> GD["🥇 Gold<br/>fct_pedidos · fct_funil<br/>dim_clientes · dim_produtos"]
 
-    GD --> MB[Metabase<br/>Dashboards]
-    GD --> API[FastAPI<br/>opcional]
+    GD --> MB["Metabase<br/>5 dashboards"]
+    GD --> API["FastAPI<br/>opcional"]
 
-    AF((Airflow<br/>orquestra tudo)) -.-> B1
-    AF -.-> B2
-    AF -.-> SV
-    AF -.-> GD
+    AF(("Airflow<br/>LocalExecutor")) -. "@02:00" .-> B1
+    AF -. "*/5 min" .-> B2
+    AF -. "dbt run" .-> SV
+    AF -. "dbt run" .-> GD
 
-    DBT[dbt tests<br/>Great Expectations] -.valida.-> SV
-    DBT -.valida.-> GD
+    DBT["dbt tests<br/>+ Great Expectations"] -. "bloqueia inválidos" .-> SV
+    DBT -. "bloqueia inválidos" .-> GD
 
     classDef src fill:#5a1e2a,stroke:#ef476f,color:#fff
     classDef bronze fill:#663b18,stroke:#cd7f32,color:#fff
@@ -337,10 +337,64 @@ flowchart LR
                 </pre>
             </div>
             <p style="font-size: 0.65em; text-align: center; margin-top: 0.6em;">
-                <span class="highlight-green">Bronze</span> captura · <span class="highlight" style="color: #c0c0c0;">Silver</span> limpa · <span class="highlight">Gold</span> modela · cada transição tem contrato claro
+                <span class="highlight-green">Bronze</span> captura · <span class="highlight" style="color: #c0c0c0;">Silver</span> limpa · <span class="highlight">Gold</span> modela · cadência anotada no próprio fluxo
             </p>
             <aside class="notes">
-                Tempo: 3,5 min. Coração da apresentação. Explicar: (1) Bronze é imutável = reversibilidade; (2) Silver aplica cast, dedup, validação; (3) Gold é modelo dimensional (Kimball); (4) Airflow coordena; (5) testes dbt+GE validam automaticamente.
+                Tempo: 3,5 min. Coração da apresentação. Explicar: (1) Bronze é imutável = reversibilidade; (2) Silver aplica cast, dedup, validação; (3) Gold é modelo dimensional (Kimball); (4) Airflow coordena com dois ritmos — batch @02:00 e streaming */5min; (5) testes dbt+GE validam automaticamente antes de avançar.
+            </aside>
+        </section>
+
+        <!-- ========== SLIDE 5b — ORQUESTRAÇÃO AIRFLOW ========== -->
+        <section>
+            <h2>Como Airflow coordena — DAGs e schedules</h2>
+            <div class="mermaid-container" style="max-height: 500px;">
+                <pre class="mermaid">
+flowchart TB
+    CRON_D["CRON · 0 2 * * *<br/><b>@02:00 diário</b>"] --> M0["start"]
+    CRON_S["CRON · */5 * * * *<br/><b>a cada 5 min</b>"] --> S1["poll_redis<br/>XREADGROUP"]
+
+    subgraph MASTER["DAG mestre — olistflow_daily"]
+        direction TB
+        M0 --> M1["ingest_all"] --> M2["dbt_silver"] --> M3["dbt_gold"] --> M4["dbt_tests"] --> M5["ge_checks"] --> M6["refresh_metabase"] --> M7["end"]
+    end
+
+    subgraph DOMAINS["DAGs por domínio"]
+        direction LR
+        D_VEN["vendas_daily"]
+        D_CAT["catalogo_daily"]
+        D_CLI["clientes_daily"]
+        D_LOG["logistica_daily"]
+        D_SEL["sellers_daily"]
+    end
+
+    subgraph STREAM["marketing_events_5min"]
+        direction TB
+        S1 --> S2["batch_to_parquet"] --> S3["dbt_incremental<br/>stg_events"] --> S4["ge_realtime_checks"]
+    end
+
+    M1 --> D_VEN
+    M1 --> D_CAT
+    M1 --> D_CLI
+    M1 --> D_LOG
+    M1 --> D_SEL
+
+    M4 -. "falha crítica" .-> M7
+    M5 -. "falha crítica" .-> M7
+
+    classDef master fill:#1e4a38,stroke:#06d6a0,color:#fff
+    classDef dom fill:#1e3a5f,stroke:#4a90e2,color:#fff
+    classDef stream fill:#4a3f1f,stroke:#ffd166,color:#fff
+
+    class MASTER master
+    class DOMAINS dom
+    class STREAM stream
+                </pre>
+            </div>
+            <p style="font-size: 0.65em; text-align: center; margin-top: 0.6em;">
+                Dois ritmos independentes: <span class="highlight-green">trem diário @02:00</span> (sequencial) + <span class="highlight">streaming */5min</span> (fire-and-forget).
+            </p>
+            <aside class="notes">
+                Tempo: 2 min. Pontos-chave: (1) separação batch/streaming em DAGs diferentes; (2) dbt_tests + GE são gates — falha crítica interrompe antes do refresh Metabase (dado ruim nunca vira dashboard); (3) idempotência por sobrescrita de partição permite religar qualquer DAG sem duplicar.
             </aside>
         </section>
 
@@ -400,6 +454,66 @@ flowchart LR
             </p>
             <aside class="notes">
                 Tempo: 1,5 min. Destacar: (1) total de 2,6 GB cabe em qualquer notebook moderno; (2) todas as escolhas têm alternativa cloud 1:1 — a arquitetura é migrável. Não listar todas — fale "cada escolha tem alternativa considerada e justificada no relatório".
+            </aside>
+        </section>
+
+        <!-- ========== SLIDE 7b — DEPLOYMENT DOCKER ========== -->
+        <section>
+            <h2>Como roda na máquina — Docker Compose</h2>
+            <div class="mermaid-container" style="max-height: 500px;">
+                <pre class="mermaid">
+flowchart TB
+    USR["👤 Usuário<br/>browser"]
+
+    subgraph HOST["💻 Host · olistflow_net"]
+        direction TB
+
+        AF_WEB["airflow-webserver<br/>:8080"]
+        AF_SCH["airflow-scheduler"]
+        AF_WEB -.-> AF_SCH
+
+        PG["olist-postgres<br/>:5432 · 200 MB"]
+        RD["olist-redis<br/>:6379 · 50 MB"]
+        META["olist-metabase<br/>:3000 · 800 MB"]
+        SIMPY["olist-simulator<br/>80 MB"]
+
+        V_DATA[("./data/<br/>bronze · duckdb")]
+        V_PG[("pg_data")]
+    end
+
+    USR -->|"localhost:8080"| AF_WEB
+    USR -->|"localhost:3000"| META
+
+    SIMPY -->|"XADD"| RD
+    AF_SCH -->|"SELECT"| PG
+    AF_SCH -->|"XREADGROUP */5min"| RD
+    AF_SCH -->|"dbt run · write parquet"| V_DATA
+    META -->|"JDBC (read-only)"| V_DATA
+    PG -. "mount" .- V_PG
+
+    classDef orch fill:#3a2a4a,stroke:#b19cd9,color:#fff
+    classDef db fill:#3a4a1e,stroke:#7cb342,color:#fff
+    classDef cache fill:#4a1e1e,stroke:#ef5350,color:#fff
+    classDef bi fill:#1e4a38,stroke:#06d6a0,color:#fff
+    classDef sim fill:#4a3f1f,stroke:#ffd166,color:#fff
+    classDef vol fill:#2a2a3a,stroke:#888,color:#fff
+    classDef usr fill:#1e3a5f,stroke:#4a90e2,color:#fff
+
+    class AF_WEB,AF_SCH orch
+    class PG db
+    class RD cache
+    class META bi
+    class SIMPY sim
+    class V_DATA,V_PG vol
+    class USR usr
+                </pre>
+            </div>
+            <p style="font-size: 0.65em; text-align: center; margin-top: 0.6em;">
+                5 containers na mesma bridge + volumes locais para código (hot-reload) e dados (persistência).
+                <span class="highlight-green">~2,6 GB em regime</span>, cabe em notebook de 8 GB.
+            </p>
+            <aside class="notes">
+                Tempo: 1,5 min. Pontos-chave: (1) DuckDB não é container — é arquivo em ./data aberto pelo scheduler e pelo Metabase em read-only; (2) código montado do host → editar dbt model não exige rebuild; (3) ./data fora do Git → clone novo regenera tudo com `make rebuild`.
             </aside>
         </section>
 
