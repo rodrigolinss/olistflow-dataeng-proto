@@ -14,17 +14,16 @@ Este arquivo é pra você (não faz parte do relatório — não precisa subir p
 
 ## Passo 1 — Revisar e personalizar antes de publicar
 
-Abra cada arquivo e ajuste o que for específico do grupo:
+- [x] `README.md` — Equipe: **Rodrigo César Lins** e **Vitor Nascimento Franco** (preenchido)
+- [x] `apresentacao/roteiro.md` — divisão de fala já atribuída a Rodrigo/Vitor
+- [x] `apresentacao/index.html` — slides identificam a dupla na capa e no encerramento
+- [ ] `docs/01-projeto.md` — opcional: ajustar se quiserem trocar o nome "OlistFlow"
 
-- [ ] `README.md` — preencher nomes da dupla em "Equipe" (linha "Integrante 1 — preencher nome e matrícula")
-- [ ] `docs/01-projeto.md` — opcional: ajustar se quiserem mudar o nome "OlistFlow" por outro
-- [ ] Qualquer lugar que tenha `preencher` ou marcação de TODO
-
-Se quiser, rode um `grep` pra achar tudo:
+Se quiser conferir resíduos:
 
 ```bash
-cd "/Users/rodrigolins/Desktop/Trabalho - engenharia de dados/ecommerce-dataeng-proto"
-grep -rn "preencher\|TODO\|FIXME" .
+cd "/Users/rodrigolins/Desktop/olistflow-dataeng-proto"
+grep -rn "preencher\|TODO\|FIXME\|Integrante A\|Integrante B" --exclude-dir=.git .
 ```
 
 ---
@@ -52,9 +51,9 @@ grep -rn "preencher\|TODO\|FIXME" .
 No terminal:
 
 ```bash
-cd "/Users/rodrigolins/Desktop/Trabalho - engenharia de dados/ecommerce-dataeng-proto"
+cd "/Users/rodrigolins/Desktop/olistflow-dataeng-proto"
 
-# Inicializar o git
+# Inicializar o git (se ainda não foi)
 git init
 git branch -M main
 
@@ -68,6 +67,8 @@ git commit -m "Parte 1 - Planejamento e desenho arquitetural do OlistFlow"
 # Subir
 git push -u origin main
 ```
+
+> No nosso caso o repositório já está em `https://github.com/rodrigolinss/olistflow-dataeng-proto` e os commits já foram empurrados — esse passo só serve se for clonar em outro ambiente.
 
 Na primeira vez, o GitHub vai pedir autenticação. A forma mais simples:
 - Username: seu usuário do GitHub
