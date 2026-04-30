@@ -38,8 +38,8 @@ Durante a apresentação, atalhos úteis do reveal.js: `→` avança, `←` volt
 
 ## Equipe
 
-- Integrante 1 — *preencher nome e matrícula*
-- Integrante 2 — *preencher nome e matrícula*
+- **Rodrigo César Lins**
+- **Vitor Nascimento Franco**
 
 ## Como ler este relatório
 

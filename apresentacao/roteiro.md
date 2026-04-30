@@ -3,22 +3,26 @@
 **Duração-alvo:** 15 minutos de exposição + 5 minutos de perguntas = 20 min total (dentro da janela 10–20 min do enunciado).
 **Formato:** dupla, alternando fala entre as seções. Ambos os integrantes devem apresentar alguma parte (requisito explícito do enunciado).
 
+**Integrantes:**
+- **Rodrigo César Lins**
+- **Vitor Nascimento Franco**
+
 ---
 
 ## Divisão proposta (ajustem conforme força de cada um)
 
 | Seção | Duração | Quem fala | Foco |
 |-------|---------|-----------|------|
-| 1. Abertura + Contexto de negócio | 1,5 min | **Integrante A** | Engajar a sala com o problema real |
-| 2. Dados e classificação (batch vs streaming) | 2,5 min | **Integrante A** | Fontes e por que dois caminhos |
-| 3. Domínios e serviços | 2,5 min | **Integrante B** | DDD aplicado; diagrama de domínios |
-| 4. Arquitetura e fluxo | 3,5 min | **Integrante B** | Diagrama principal; por que Medalhão |
-| 5. Tecnologias e justificativas | 3,5 min | **Integrante A** | Stack com justificativa por etapa |
-| 6. Tradeoffs + Próximos passos | 1,5 min | **Integrante B** | Honestidade sobre limites + roadmap |
-| 7. Encerramento | 0,5 min | **Integrante A** | Convite a perguntas |
+| 1. Abertura + Contexto de negócio | 1,5 min | **Rodrigo** | Engajar a sala com o problema real |
+| 2. Dados e classificação (batch vs streaming) | 2,5 min | **Rodrigo** | Fontes e por que dois caminhos |
+| 3. Domínios e serviços | 2,5 min | **Vitor** | DDD aplicado; diagrama de domínios |
+| 4. Arquitetura e fluxo | 3,5 min | **Vitor** | Diagrama principal; por que Medalhão |
+| 5. Tecnologias e justificativas | 3,5 min | **Rodrigo** | Stack com justificativa por etapa |
+| 6. Tradeoffs + Próximos passos | 1,5 min | **Vitor** | Honestidade sobre limites + roadmap |
+| 7. Encerramento | 0,5 min | **Rodrigo** | Convite a perguntas |
 | 8. Perguntas | 5 min | **Ambos** | Dividir por afinidade temática |
 
-Alternativa: se preferirem dividir por "blocos" em vez de alternar, Integrante A pega seções 1–3 (contexto, dados, domínios) e Integrante B pega 4–7 (arquitetura, tecnologias, tradeoffs). Escolham o que sair mais fluido no ensaio.
+Alternativa: se preferirem dividir por "blocos" em vez de alternar, Rodrigo pega seções 1–3 (contexto, dados, domínios) e Vitor pega 4–7 (arquitetura, tecnologias, tradeoffs). Escolham o que sair mais fluido no ensaio.
 
 ---
 

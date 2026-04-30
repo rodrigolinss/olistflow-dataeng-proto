@@ -29,17 +29,66 @@
         .reveal section.center { text-align: center; }
         .reveal .slide-number { font-size: 14px; color: var(--muted); }
 
-        .tagline { color: var(--muted); font-size: 0.7em; font-weight: 400; display: block; margin-top: 0.3em; }
+        .tagline { color: var(--muted); font-size: 0.7em; font-weight: 400; display: block; margin-top: 0.4em; }
 
-        .meta-row { display: flex; gap: 1.5em; justify-content: center; margin-top: 2em; color: var(--muted); font-size: 0.6em; }
-        .meta-row span { border-left: 2px solid var(--accent); padding-left: 0.8em; }
-        .meta-row span:first-child { border-left: none; padding-left: 0; }
+        .meta-row {
+            display: flex; gap: 2em; justify-content: center; flex-wrap: wrap;
+            margin-top: 1.6em; color: var(--text); font-size: 0.5em;
+        }
+        .meta-row span {
+            display: inline-flex; align-items: center; gap: 0.5em;
+            padding: 0.55em 1em; border-radius: 999px;
+            background: var(--card-bg); border: 1px solid var(--border);
+            color: var(--muted); letter-spacing: 0.02em;
+        }
+        .meta-row span strong { color: var(--accent); font-weight: 600; }
 
         .badge {
-            display: inline-block; padding: 4px 12px; border-radius: 12px;
-            font-size: 0.45em; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
-            background: rgba(255, 209, 102, 0.15); color: var(--accent); border: 1px solid rgba(255, 209, 102, 0.3);
-            margin-bottom: 1em;
+            display: inline-block; padding: 0.5em 1.1em; border-radius: 999px;
+            font-size: 0.42em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+            background: rgba(255, 209, 102, 0.12); color: var(--accent);
+            border: 1px solid rgba(255, 209, 102, 0.35);
+            margin-bottom: 0.8em;
+        }
+
+        /* COVER + CLOSING */
+        .cover-title {
+            font-size: 4em; font-weight: 800; letter-spacing: -0.03em;
+            margin: 0.05em 0 0.1em 0; line-height: 1;
+            background: linear-gradient(135deg, #ffd166 0%, #06d6a0 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .cover-subtitle {
+            color: var(--text); font-size: 1em; font-weight: 400;
+            margin: 0; opacity: 0.92;
+        }
+        .presenters-grid {
+            display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1em; margin: 1.6em auto 0; max-width: 720px;
+        }
+        .presenter {
+            display: flex; align-items: center; gap: 0.9em;
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 14px; padding: 0.85em 1em;
+            text-align: left;
+        }
+        .presenter .avatar {
+            width: 44px; height: 44px; flex: 0 0 44px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.55em; font-weight: 700; letter-spacing: 0.04em;
+            color: #0d0d15;
+        }
+        .presenter .avatar.a { background: linear-gradient(135deg, #ffd166, #f4a261); }
+        .presenter .avatar.b { background: linear-gradient(135deg, #06d6a0, #4aa3df); }
+        .presenter .who { display: flex; flex-direction: column; gap: 0.15em; min-width: 0; }
+        .presenter .who .role {
+            color: var(--muted); font-size: 0.42em; text-transform: uppercase;
+            letter-spacing: 0.12em; font-weight: 600;
+        }
+        .presenter .who .name {
+            color: var(--text); font-size: 0.62em; font-weight: 600; line-height: 1.2;
         }
 
         .reveal table {
@@ -142,7 +191,7 @@
 <body>
 
 <div class="footer-bar">
-    <span class="brand">OlistFlow</span>
+    <span class="brand">OlistFlow · Rodrigo Lins &amp; Vitor Franco</span>
     <span class="detail">Engenharia de Dados · Parte 1 · 30/04/2026</span>
 </div>
 
@@ -152,15 +201,35 @@
         <!-- ========== SLIDE 1 — CAPA ========== -->
         <section class="center" data-background-gradient="radial-gradient(circle at 30% 30%, #1a1a2e 0%, #0d0d15 100%)">
             <span class="badge">1ª Avaliação · Engenharia de Dados</span>
-            <h1 style="font-size: 3em; margin-bottom: 0.2em;">OlistFlow</h1>
-            <p style="color: var(--accent-2); font-size: 1.2em; margin: 0;">Protótipo de Ciclo de Vida de Engenharia de Dados</p>
+            <h1 class="cover-title">OlistFlow</h1>
+            <p class="cover-subtitle">Protótipo de Ciclo de Vida de Engenharia de Dados</p>
             <p class="tagline">Planejamento e Desenho Arquitetural · Parte 1 de 2</p>
-            <div class="meta-row">
-                <span><strong>Dupla:</strong> Integrante A · Integrante B</span>
-                <span><strong>Apresentação:</strong> 30/04/2026</span>
+
+            <div class="presenters-grid">
+                <div class="presenter">
+                    <div class="avatar a">RL</div>
+                    <div class="who">
+                        <span class="role">Apresentador</span>
+                        <span class="name">Rodrigo César Lins</span>
+                    </div>
+                </div>
+                <div class="presenter">
+                    <div class="avatar b">VF</div>
+                    <div class="who">
+                        <span class="role">Apresentador</span>
+                        <span class="name">Vitor Nascimento Franco</span>
+                    </div>
+                </div>
             </div>
+
+            <div class="meta-row">
+                <span><strong>📅</strong> 30/04/2026</span>
+                <span><strong>⏱️</strong> 15 min + Q&amp;A</span>
+                <span><strong>🎯</strong> Parte 1 de 2</span>
+            </div>
+
             <aside class="notes">
-                Cumprimentar a turma. Falar em 30 segundos: "somos a dupla A+B e vamos apresentar o OlistFlow, nosso protótipo de pipeline para um marketplace brasileiro de e-commerce. Antes de mergulhar na arquitetura, deixa a gente te convencer de que o problema vale a pena."
+                Cumprimentar a turma. Falar em 30 segundos: "somos Rodrigo e Vitor e vamos apresentar o OlistFlow, nosso protótipo de pipeline para um marketplace brasileiro de e-commerce. Antes de mergulhar na arquitetura, deixa a gente te convencer de que o problema vale a pena."
             </aside>
         </section>
 
@@ -621,24 +690,37 @@ flowchart TB
 
         <!-- ========== SLIDE 11 — ENCERRAMENTO ========== -->
         <section class="center" data-background-gradient="radial-gradient(circle at 70% 70%, #1a1a2e 0%, #0d0d15 100%)">
-            <h1 style="font-size: 2.2em;">Obrigado!</h1>
-            <p style="color: var(--accent-2); font-size: 1em; margin-bottom: 1.5em;">Bora pras perguntas</p>
+            <span class="badge">Obrigado pela atenção</span>
+            <h1 class="cover-title" style="font-size: 3.4em;">Perguntas?</h1>
+            <p class="cover-subtitle">A gente responde por afinidade temática — e o que não couber, te mandamos no repo.</p>
 
-            <div class="grid-2" style="margin-top: 1em;">
-                <div class="card">
-                    <h3>📂 Repositório público</h3>
-                    <p style="font-family: monospace; color: var(--accent); font-size: 0.75em;">github.com/rodrigolinss<br>/olistflow-dataeng-proto</p>
+            <div class="presenters-grid">
+                <div class="presenter">
+                    <div class="avatar a">RL</div>
+                    <div class="who">
+                        <span class="role">Contexto · Dados · Stack</span>
+                        <span class="name">Rodrigo César Lins</span>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3>📊 Esta apresentação</h3>
-                    <p style="font-size: 0.75em;">Disponível no próprio repositório em <code>/apresentacao/</code> — também publicada via GitHub Pages.</p>
+                <div class="presenter">
+                    <div class="avatar b">VF</div>
+                    <div class="who">
+                        <span class="role">Domínios · Arquitetura · Tradeoffs</span>
+                        <span class="name">Vitor Nascimento Franco</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="meta-row" style="margin-top: 2.5em;">
-                <span>OlistFlow</span>
+            <div class="card" style="margin: 1.4em auto 0; max-width: 620px; text-align: center;">
+                <h3 style="margin: 0 0 0.4em 0;">📂 Repositório público</h3>
+                <p style="font-family: 'SF Mono', Menlo, monospace; color: var(--accent); font-size: 0.72em; word-break: break-all; margin: 0;">github.com/rodrigolinss/olistflow-dataeng-proto</p>
+                <p style="font-size: 0.55em; color: var(--muted); margin: 0.6em 0 0;">Slides em <code>/apresentacao/</code> · Relatório em <code>/docs/</code></p>
+            </div>
+
+            <div class="meta-row" style="margin-top: 1.2em;">
+                <span><strong>OlistFlow</strong></span>
                 <span>Engenharia de Dados</span>
-                <span>Parte 1 · 2026</span>
+                <span>Parte 1 · 30/04/2026</span>
             </div>
 
             <aside class="notes">
