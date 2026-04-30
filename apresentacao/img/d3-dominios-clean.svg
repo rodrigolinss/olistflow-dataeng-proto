@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="100%" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cccccc"/>
+    </marker>
+    <style>
+      .bg{fill:#0d0d15}
+      .col{font-family:"Segoe UI",-apple-system,sans-serif;font-size:18px;font-weight:700;fill:#ffd166;letter-spacing:0.08em}
+      .lbl{font-family:"Segoe UI",-apple-system,sans-serif;font-size:16px;font-weight:700;fill:#ffffff}
+      .sub{font-family:"Segoe UI",-apple-system,sans-serif;font-size:12px;fill:#bcbcc8}
+      .edge{stroke:#9a9aa8;stroke-width:1.6;fill:none}
+      .edge-stream{stroke:#ef476f;stroke-width:1.8;fill:none}
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="720"/>
+
+  <!-- Column headers -->
+  <text class="col" x="140" y="42" text-anchor="middle">FONTES</text>
+  <text class="col" x="540" y="42" text-anchor="middle">6 DOMÍNIOS DE NEGÓCIO</text>
+  <text class="col" x="1000" y="42" text-anchor="middle">CONSUMIDORES</text>
+
+  <!-- Source: Batch -->
+  <g>
+    <rect x="40" y="186" width="200" height="84" rx="12" fill="#4a3f1f" stroke="#ffd166" stroke-width="2"/>
+    <text class="lbl" x="140" y="220" text-anchor="middle">Batch · ERP</text>
+    <text class="sub" x="140" y="244" text-anchor="middle">PostgreSQL · D-1</text>
+    <text class="sub" x="140" y="260" text-anchor="middle">~1,5 M linhas/dia</text>
+  </g>
+
+  <!-- Source: Streaming -->
+  <g>
+    <rect x="40" y="430" width="200" height="84" rx="12" fill="#5a1e2a" stroke="#ef476f" stroke-width="2"/>
+    <text class="lbl" x="140" y="464" text-anchor="middle">Streaming</text>
+    <text class="sub" x="140" y="488" text-anchor="middle">Redis Streams · 5 min</text>
+    <text class="sub" x="140" y="504" text-anchor="middle">~50 k eventos/dia</text>
+  </g>
+
+  <!-- 6 Domains -->
+  <g>
+    <rect x="380" y="80" width="320" height="68" rx="10" fill="#1e3a5f" stroke="#4a90e2" stroke-width="2"/>
+    <text class="lbl" x="540" y="110" text-anchor="middle">Vendas</text>
+    <text class="sub" x="540" y="132" text-anchor="middle">Pedidos · Itens · Pagamentos</text>
+  </g>
+  <g>
+    <rect x="380" y="166" width="320" height="68" rx="10" fill="#1e3a5f" stroke="#4a90e2" stroke-width="2"/>
+    <text class="lbl" x="540" y="196" text-anchor="middle">Catálogo</text>
+    <text class="sub" x="540" y="218" text-anchor="middle">Produtos · Categorias</text>
+  </g>
+  <g>
+    <rect x="380" y="252" width="320" height="68" rx="10" fill="#1e3a5f" stroke="#4a90e2" stroke-width="2"/>
+    <text class="lbl" x="540" y="282" text-anchor="middle">Clientes</text>
+    <text class="sub" x="540" y="304" text-anchor="middle">Cadastro · Reviews · RFM</text>
+  </g>
+  <g>
+    <rect x="380" y="338" width="320" height="68" rx="10" fill="#1e3a5f" stroke="#4a90e2" stroke-width="2"/>
+    <text class="lbl" x="540" y="368" text-anchor="middle">Logística</text>
+    <text class="sub" x="540" y="390" text-anchor="middle">Entregas · SLA · Geo</text>
+  </g>
+  <g>
+    <rect x="380" y="424" width="320" height="68" rx="10" fill="#1e3a5f" stroke="#4a90e2" stroke-width="2"/>
+    <text class="lbl" x="540" y="454" text-anchor="middle">Marketing</text>
+    <text class="sub" x="540" y="476" text-anchor="middle">Funil · Sessões · Atribuição</text>
+  </g>
+  <g>
+    <rect x="380" y="510" width="320" height="68" rx="10" fill="#1e3a5f" stroke="#4a90e2" stroke-width="2"/>
+    <text class="lbl" x="540" y="540" text-anchor="middle">Sellers</text>
+    <text class="sub" x="540" y="562" text-anchor="middle">Vendedores · Scorecard</text>
+  </g>
+
+  <!-- Consumer aggregator -->
+  <g>
+    <rect x="860" y="220" width="280" height="240" rx="12" fill="#1e4a38" stroke="#06d6a0" stroke-width="2"/>
+    <text class="lbl" x="1000" y="256" text-anchor="middle">Dashboards Metabase</text>
+    <line x1="900" y1="276" x2="1100" y2="276" stroke="#06d6a0" stroke-width="1" opacity="0.4"/>
+    <text class="sub" x="1000" y="306" text-anchor="middle" style="fill:#fff">Executivo</text>
+    <text class="sub" x="1000" y="332" text-anchor="middle" style="fill:#fff">Vendas</text>
+    <text class="sub" x="1000" y="358" text-anchor="middle" style="fill:#fff">SLA Logístico</text>
+    <text class="sub" x="1000" y="384" text-anchor="middle" style="fill:#fff">Funil de Conversão</text>
+    <text class="sub" x="1000" y="410" text-anchor="middle" style="fill:#fff">Sellers Scorecard</text>
+    <text class="sub" x="1000" y="440" text-anchor="middle">+ FastAPI (opcional)</text>
+  </g>
+
+  <!-- Edges: Batch -> 5 domains (NOT Marketing) -->
+  <path class="edge" d="M 240 228 C 300 228, 320 114, 380 114" marker-end="url(#arr)"/>
+  <path class="edge" d="M 240 228 C 300 228, 320 200, 380 200" marker-end="url(#arr)"/>
+  <path class="edge" d="M 240 228 C 300 228, 320 286, 380 286" marker-end="url(#arr)"/>
+  <path class="edge" d="M 240 228 C 300 228, 320 372, 380 372" marker-end="url(#arr)"/>
+  <path class="edge" d="M 240 228 C 300 228, 320 544, 380 544" marker-end="url(#arr)"/>
+
+  <!-- Edges: Streaming -> Marketing -->
+  <path class="edge-stream" d="M 240 472 C 300 472, 320 458, 380 458" marker-end="url(#arr)"/>
+
+  <!-- Edges: 6 domains -> Consumers -->
+  <path class="edge" d="M 700 114 C 760 114, 800 280, 860 280" marker-end="url(#arr)"/>
+  <path class="edge" d="M 700 200 C 760 200, 800 310, 860 310" marker-end="url(#arr)"/>
+  <path class="edge" d="M 700 286 C 760 286, 800 340, 860 340" marker-end="url(#arr)"/>
+  <path class="edge" d="M 700 372 C 760 372, 800 370, 860 370" marker-end="url(#arr)"/>
+  <path class="edge" d="M 700 458 C 760 458, 800 400, 860 400" marker-end="url(#arr)"/>
+  <path class="edge" d="M 700 544 C 760 544, 800 430, 860 430" marker-end="url(#arr)"/>
+
+  <!-- Legend / hint -->
+  <g transform="translate(40, 660)">
+    <rect x="0" y="0" width="14" height="3" fill="#9a9aa8"/>
+    <text class="sub" x="20" y="6" dominant-baseline="middle">batch diário</text>
+    <rect x="120" y="0" width="14" height="3" fill="#ef476f"/>
+    <text class="sub" x="140" y="6" dominant-baseline="middle">streaming</text>
+  </g>
+</svg>
