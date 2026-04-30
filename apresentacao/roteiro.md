@@ -30,11 +30,17 @@ Frase-âncora: **"tratamos os dois porque eles contam histórias diferentes da m
 
 ---
 
-## Slide 4 — Domínios e serviços
+## Slide 4 — Domínios: quem quer o quê
 
-> "A gente organizou o pipeline em seis domínios que espelham como um marketplace real divide os times: Vendas, Catálogo, Clientes, Logística, Marketing e Sellers. Cada um tem dados próprios, mas compartilha serviços centrais — o data lake bronze, o orquestrador, os testes de qualidade, o Metabase. É DDD aplicado a dados."
+A ideia aqui é mostrar que domínio não é abstração técnica — é **quem usa o dado e o que tira dele**.
 
-Pra perguntar de Data Mesh: a separação por domínios já prepara essa evolução.
+> "A gente identificou seis domínios, cada um com um interessado claro. Vendas serve liderança e analistas — eles querem GMV, ticket médio, conversão. Catálogo é referência usada por todos os outros domínios — produto e categoria canônicos. Clientes serve Marketing e Vendas com segmentação RFM. Logística é da operação — SLA de entrega, gargalos por rota. Marketing serve Produto e Marketing — funil de conversão, abandono de carrinho. E Sellers é gestão de marketplace — scorecard, NPS por vendedor."
+
+Depois aponta pro diagrama:
+
+> "O diagrama mostra como esses domínios se conectam: cada um escreve no data lake compartilhado, e dimensões como `dim_clientes` são consumidas por mais de um domínio — reuso sem duplicação."
+
+Frase-âncora: **"domínio é definido pelo consumidor, não pela tabela"**.
 
 ---
 
