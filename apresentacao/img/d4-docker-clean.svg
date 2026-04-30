@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="100%" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cccccc"/>
+    </marker>
+    <marker id="arr-stream" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ef476f"/>
+    </marker>
+    <marker id="arr-mount" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#888"/>
+    </marker>
+    <style>
+      .bg{fill:#0d0d15}
+      .col{font-family:"Segoe UI",-apple-system,sans-serif;font-size:18px;font-weight:700;fill:#ffd166;letter-spacing:0.08em}
+      .lbl{font-family:"Segoe UI",-apple-system,sans-serif;font-size:14px;font-weight:700;fill:#ffffff}
+      .lbl-sm{font-family:"Segoe UI",-apple-system,sans-serif;font-size:13px;font-weight:700;fill:#ffffff}
+      .sub{font-family:"Segoe UI",-apple-system,sans-serif;font-size:11px;fill:#bcbcc8}
+      .port{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:11px;font-weight:700;fill:#ffd166}
+      .net-label{font-family:"Segoe UI",sans-serif;font-size:13px;font-weight:700;fill:#b19cd9;letter-spacing:0.05em}
+      .edge-label{font-family:"Segoe UI",sans-serif;font-size:10px;fill:#cccccc}
+      .edge{stroke:#9a9aa8;stroke-width:1.6;fill:none}
+      .edge-stream{stroke:#ef476f;stroke-width:1.6;fill:none}
+      .edge-mount{stroke:#888;stroke-width:1.4;stroke-dasharray:4,3;fill:none}
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="720"/>
+
+  <!-- Title -->
+  <text class="col" x="600" y="34" text-anchor="middle">DOCKER COMPOSE · 5 CONTAINERS + 2 VOLUMES</text>
+
+  <!-- ===== USER ===== -->
+  <g>
+    <rect x="500" y="60" width="200" height="60" rx="30" fill="#1e3a5f" stroke="#4a90e2" stroke-width="2"/>
+    <text class="lbl" x="600" y="86" text-anchor="middle">👤 Usuário</text>
+    <text class="sub" x="600" y="106" text-anchor="middle">browser local</text>
+  </g>
+
+  <!-- ===== BRIDGE NETWORK box ===== -->
+  <g>
+    <rect x="40" y="170" width="1120" height="380" rx="14" fill="rgba(177,156,217,0.05)" stroke="#b19cd9" stroke-width="2" stroke-dasharray="6,4"/>
+    <text class="net-label" x="60" y="195">🌐 olistflow_net  ·  Docker bridge network</text>
+  </g>
+
+  <!-- AIRFLOW WEBSERVER -->
+  <g>
+    <rect x="80" y="220" width="200" height="90" rx="10" fill="#3a2a4a" stroke="#b19cd9" stroke-width="2"/>
+    <text class="lbl" x="180" y="248" text-anchor="middle">airflow-webserver</text>
+    <text class="port" x="180" y="270" text-anchor="middle">:8080</text>
+    <text class="sub" x="180" y="290" text-anchor="middle">UI · DAGs · logs</text>
+  </g>
+
+  <!-- AIRFLOW SCHEDULER -->
+  <g>
+    <rect x="80" y="380" width="200" height="100" rx="10" fill="#3a2a4a" stroke="#b19cd9" stroke-width="2"/>
+    <text class="lbl" x="180" y="408" text-anchor="middle">airflow-scheduler</text>
+    <text class="sub" x="180" y="430" text-anchor="middle">executa DAGs</text>
+    <text class="sub" x="180" y="448" text-anchor="middle">LocalExecutor</text>
+    <text class="sub" x="180" y="466" text-anchor="middle">~600 MB</text>
+  </g>
+
+  <!-- POSTGRES -->
+  <g>
+    <rect x="350" y="220" width="180" height="90" rx="10" fill="#3a4a1e" stroke="#7cb342" stroke-width="2"/>
+    <text class="lbl" x="440" y="248" text-anchor="middle">olist-postgres</text>
+    <text class="port" x="440" y="270" text-anchor="middle">:5432</text>
+    <text class="sub" x="440" y="290" text-anchor="middle">ERP · ~200 MB</text>
+  </g>
+
+  <!-- REDIS -->
+  <g>
+    <rect x="350" y="380" width="180" height="90" rx="10" fill="#4a1e1e" stroke="#ef5350" stroke-width="2"/>
+    <text class="lbl" x="440" y="408" text-anchor="middle">olist-redis</text>
+    <text class="port" x="440" y="430" text-anchor="middle">:6379</text>
+    <text class="sub" x="440" y="450" text-anchor="middle">streams · ~50 MB</text>
+  </g>
+
+  <!-- SIMULATOR -->
+  <g>
+    <rect x="600" y="380" width="180" height="90" rx="10" fill="#4a3f1f" stroke="#ffd166" stroke-width="2"/>
+    <text class="lbl" x="690" y="408" text-anchor="middle">olist-simulator</text>
+    <text class="sub" x="690" y="430" text-anchor="middle">gera eventos</text>
+    <text class="sub" x="690" y="450" text-anchor="middle">~80 MB</text>
+  </g>
+
+  <!-- METABASE -->
+  <g>
+    <rect x="850" y="220" width="220" height="90" rx="10" fill="#1e4a38" stroke="#06d6a0" stroke-width="2"/>
+    <text class="lbl" x="960" y="248" text-anchor="middle">olist-metabase</text>
+    <text class="port" x="960" y="270" text-anchor="middle">:3000</text>
+    <text class="sub" x="960" y="290" text-anchor="middle">BI · ~800 MB</text>
+  </g>
+
+  <!-- ===== VOLUMES ===== -->
+  <g>
+    <ellipse cx="700" cy="610" rx="120" ry="35" fill="#2a2a3a" stroke="#aaaaaa" stroke-width="2"/>
+    <text class="lbl-sm" x="700" y="608" text-anchor="middle">./data/</text>
+    <text class="sub" x="700" y="626" text-anchor="middle">bronze · duckdb</text>
+  </g>
+  <g>
+    <ellipse cx="440" cy="610" rx="100" ry="32" fill="#2a2a3a" stroke="#aaaaaa" stroke-width="2"/>
+    <text class="lbl-sm" x="440" y="608" text-anchor="middle">pg_data</text>
+    <text class="sub" x="440" y="624" text-anchor="middle">volume Postgres</text>
+  </g>
+
+  <!-- ===== EDGES ===== -->
+  <!-- User → Webserver -->
+  <path class="edge" d="M 580 120 C 580 160, 250 180, 180 220" marker-end="url(#arr)"/>
+  <text class="edge-label" x="320" y="160">localhost:8080</text>
+
+  <!-- User → Metabase -->
+  <path class="edge" d="M 620 120 C 620 160, 900 180, 960 220" marker-end="url(#arr)"/>
+  <text class="edge-label" x="800" y="160">localhost:3000</text>
+
+  <!-- Webserver -.- Scheduler (interno) -->
+  <path class="edge-mount" d="M 180 310 L 180 380" marker-end="url(#arr-mount)"/>
+
+  <!-- Scheduler → Postgres (SELECT) -->
+  <path class="edge" d="M 280 410 C 320 410, 340 290, 350 270" marker-end="url(#arr)"/>
+  <text class="edge-label" x="295" y="370">SELECT</text>
+
+  <!-- Scheduler → Redis (XREADGROUP) -->
+  <path class="edge" d="M 280 430 L 350 430" marker-end="url(#arr)"/>
+  <text class="edge-label" x="290" y="424">XREADGROUP */5min</text>
+
+  <!-- Simulator → Redis (XADD) -->
+  <path class="edge-stream" d="M 600 425 L 530 425" marker-end="url(#arr-stream)"/>
+  <text class="edge-label" x="540" y="418" style="fill:#ef476f">XADD</text>
+
+  <!-- Scheduler → ./data -->
+  <path class="edge" d="M 280 460 C 400 510, 600 580, 700 580" marker-end="url(#arr)"/>
+  <text class="edge-label" x="380" y="510">dbt run · write parquet</text>
+
+  <!-- Metabase → ./data -->
+  <path class="edge" d="M 920 310 C 850 410, 800 540, 760 580" marker-end="url(#arr)"/>
+  <text class="edge-label" x="830" y="450">JDBC (read-only)</text>
+
+  <!-- Postgres -.- pg_data (mount) -->
+  <path class="edge-mount" d="M 440 310 C 440 480, 440 540, 440 575" marker-end="url(#arr-mount)"/>
+  <text class="edge-label" x="450" y="490">mount</text>
+
+  <!-- Footer hint -->
+  <g>
+    <rect x="40" y="668" width="1120" height="40" rx="8" fill="rgba(255,255,255,0.04)" stroke="#333"/>
+    <text class="sub" x="60" y="688" style="font-size:11px;fill:#fff">⚙ Volume <tspan style="font-family:monospace;fill:#ffd166">./data/</tspan> é o data lake — escrito pelo scheduler, lido em read-only pelo Metabase. DuckDB não é container: é um arquivo dentro desse volume.</text>
+    <text class="sub" x="60" y="704" style="font-size:11px">Total em regime: ~2,6 GB de RAM · cabe em notebook de 8 GB.</text>
+  </g>
+</svg>

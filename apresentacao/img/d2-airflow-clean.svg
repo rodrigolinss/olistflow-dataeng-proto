@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="100%" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cccccc"/>
+    </marker>
+    <marker id="arr-stream" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ef476f"/>
+    </marker>
+    <marker id="arr-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ef476f"/>
+    </marker>
+    <style>
+      .bg{fill:#0d0d15}
+      .col{font-family:"Segoe UI",-apple-system,sans-serif;font-size:18px;font-weight:700;fill:#ffd166;letter-spacing:0.08em}
+      .lbl{font-family:"Segoe UI",-apple-system,sans-serif;font-size:13px;font-weight:700;fill:#ffffff}
+      .sub{font-family:"Segoe UI",-apple-system,sans-serif;font-size:11px;fill:#bcbcc8}
+      .badge{font-family:"Segoe UI",-apple-system,sans-serif;font-size:11px;font-weight:700;fill:#ffd166}
+      .edge{stroke:#9a9aa8;stroke-width:1.8;fill:none}
+      .edge-stream{stroke:#ef476f;stroke-width:1.8;fill:none}
+      .edge-fail{stroke:#ef476f;stroke-width:1.4;stroke-dasharray:5,3;fill:none}
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="720"/>
+
+  <!-- Title -->
+  <text class="col" x="600" y="38" text-anchor="middle">APACHE AIRFLOW · 2 RITMOS INDEPENDENTES</text>
+
+  <!-- ============= TRILHO BATCH ============= -->
+  <text class="col" x="80" y="110" style="font-size:14px;fill:#ffd166">BATCH · DAG MESTRE</text>
+
+  <!-- Cron @02:00 -->
+  <g>
+    <rect x="40" y="140" width="150" height="80" rx="10" fill="#4a3f1f" stroke="#ffd166" stroke-width="2"/>
+    <text class="lbl" x="115" y="170" text-anchor="middle">⏰ CRON</text>
+    <text class="sub" x="115" y="190" text-anchor="middle">0 2 * * *</text>
+    <text class="badge" x="115" y="208" text-anchor="middle">@02:00 diário</text>
+  </g>
+
+  <!-- DAG container box -->
+  <rect x="230" y="120" width="940" height="180" rx="12" fill="rgba(74,63,31,0.18)" stroke="#ffd166" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text class="badge" x="250" y="142" style="font-size:12px">DAG · olistflow_daily</text>
+
+  <!-- 6 tasks horizontalmente -->
+  <g>
+    <rect x="250" y="160" width="130" height="70" rx="8" fill="#1e3a5f" stroke="#4a90e2" stroke-width="1.5"/>
+    <text class="lbl" x="315" y="190" text-anchor="middle">ingest_all</text>
+    <text class="sub" x="315" y="208" text-anchor="middle">PG → Bronze</text>
+  </g>
+  <g>
+    <rect x="400" y="160" width="130" height="70" rx="8" fill="#1e3a5f" stroke="#4a90e2" stroke-width="1.5"/>
+    <text class="lbl" x="465" y="190" text-anchor="middle">dbt_silver</text>
+    <text class="sub" x="465" y="208" text-anchor="middle">stg_* + int_*</text>
+  </g>
+  <g>
+    <rect x="550" y="160" width="130" height="70" rx="8" fill="#1e3a5f" stroke="#4a90e2" stroke-width="1.5"/>
+    <text class="lbl" x="615" y="190" text-anchor="middle">dbt_gold</text>
+    <text class="sub" x="615" y="208" text-anchor="middle">fct_* + dim_*</text>
+  </g>
+  <g>
+    <rect x="700" y="160" width="130" height="70" rx="8" fill="#1e3a4a" stroke="#4aa3df" stroke-width="2"/>
+    <text class="lbl" x="765" y="190" text-anchor="middle">tests</text>
+    <text class="sub" x="765" y="208" text-anchor="middle" style="fill:#4aa3df">GATE</text>
+  </g>
+  <g>
+    <rect x="850" y="160" width="130" height="70" rx="8" fill="#1e3a4a" stroke="#4aa3df" stroke-width="2"/>
+    <text class="lbl" x="915" y="190" text-anchor="middle">ge_checks</text>
+    <text class="sub" x="915" y="208" text-anchor="middle" style="fill:#4aa3df">GATE</text>
+  </g>
+  <g>
+    <rect x="1000" y="160" width="150" height="70" rx="8" fill="#1e4a38" stroke="#06d6a0" stroke-width="1.5"/>
+    <text class="lbl" x="1075" y="190" text-anchor="middle">refresh_metabase</text>
+    <text class="sub" x="1075" y="208" text-anchor="middle">end</text>
+  </g>
+
+  <!-- batch arrows -->
+  <path class="edge" d="M 190 195 L 250 195" marker-end="url(#arr)"/>
+  <path class="edge" d="M 380 195 L 400 195" marker-end="url(#arr)"/>
+  <path class="edge" d="M 530 195 L 550 195" marker-end="url(#arr)"/>
+  <path class="edge" d="M 680 195 L 700 195" marker-end="url(#arr)"/>
+  <path class="edge" d="M 830 195 L 850 195" marker-end="url(#arr)"/>
+  <path class="edge" d="M 980 195 L 1000 195" marker-end="url(#arr)"/>
+
+  <!-- gate fail arrows (down to "stop") -->
+  <path class="edge-fail" d="M 765 230 C 765 270, 700 280, 600 290" marker-end="url(#arr-fail)"/>
+  <text class="sub" x="600" y="298" text-anchor="end" style="fill:#ef476f;font-size:10px">falha crítica = STOP</text>
+
+  <!-- ============= SEPARADOR ============= -->
+  <line x1="40" y1="380" x2="1160" y2="380" stroke="#444" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- ============= TRILHO STREAMING ============= -->
+  <text class="col" x="80" y="430" style="font-size:14px;fill:#ef476f">STREAMING · MICRO-BATCH</text>
+
+  <!-- Cron */5 -->
+  <g>
+    <rect x="40" y="460" width="150" height="80" rx="10" fill="#5a1e2a" stroke="#ef476f" stroke-width="2"/>
+    <text class="lbl" x="115" y="490" text-anchor="middle">⏰ CRON</text>
+    <text class="sub" x="115" y="510" text-anchor="middle">*/5 * * * *</text>
+    <text class="badge" x="115" y="528" text-anchor="middle" style="fill:#ef476f">a cada 5 min</text>
+  </g>
+
+  <!-- DAG container streaming -->
+  <rect x="230" y="440" width="780" height="180" rx="12" fill="rgba(90,30,42,0.18)" stroke="#ef476f" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text class="badge" x="250" y="462" style="font-size:12px;fill:#ef476f">DAG · marketing_events_5min</text>
+
+  <!-- 4 tasks streaming -->
+  <g>
+    <rect x="250" y="480" width="160" height="70" rx="8" fill="#1e3a5f" stroke="#4a90e2" stroke-width="1.5"/>
+    <text class="lbl" x="330" y="510" text-anchor="middle">poll_redis</text>
+    <text class="sub" x="330" y="528" text-anchor="middle">XREADGROUP</text>
+  </g>
+  <g>
+    <rect x="430" y="480" width="160" height="70" rx="8" fill="#1e3a5f" stroke="#4a90e2" stroke-width="1.5"/>
+    <text class="lbl" x="510" y="510" text-anchor="middle">batch_to_parquet</text>
+    <text class="sub" x="510" y="528" text-anchor="middle">events/dt=/hr=</text>
+  </g>
+  <g>
+    <rect x="610" y="480" width="160" height="70" rx="8" fill="#1e3a5f" stroke="#4a90e2" stroke-width="1.5"/>
+    <text class="lbl" x="690" y="510" text-anchor="middle">dbt_incremental</text>
+    <text class="sub" x="690" y="528" text-anchor="middle">stg_events</text>
+  </g>
+  <g>
+    <rect x="790" y="480" width="200" height="70" rx="8" fill="#1e3a4a" stroke="#4aa3df" stroke-width="2"/>
+    <text class="lbl" x="890" y="510" text-anchor="middle">ge_realtime_checks</text>
+    <text class="sub" x="890" y="528" text-anchor="middle" style="fill:#4aa3df">GATE</text>
+  </g>
+
+  <!-- streaming arrows -->
+  <path class="edge-stream" d="M 190 515 L 250 515" marker-end="url(#arr-stream)"/>
+  <path class="edge" d="M 410 515 L 430 515" marker-end="url(#arr)"/>
+  <path class="edge" d="M 590 515 L 610 515" marker-end="url(#arr)"/>
+  <path class="edge" d="M 770 515 L 790 515" marker-end="url(#arr)"/>
+
+  <!-- legend / footer -->
+  <g>
+    <rect x="40" y="650" width="1120" height="50" rx="8" fill="rgba(255,255,255,0.04)" stroke="#333" stroke-width="1"/>
+    <text class="sub" x="60" y="675" style="font-size:12px;fill:#fff">⚙ Idempotência: cada DAG sobrescreve sua partição — religar = sem duplicar.</text>
+    <text class="sub" x="60" y="690" style="font-size:11px">Gates (azul) bloqueiam o pipeline se dado inválido for detectado · Metabase só atualiza se tudo passar.</text>
+  </g>
+</svg>

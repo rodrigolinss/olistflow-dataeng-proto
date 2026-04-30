@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="100%" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cccccc"/>
+    </marker>
+    <marker id="arr-stream" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ef476f"/>
+    </marker>
+    <style>
+      .bg{fill:#0d0d15}
+      .col{font-family:"Segoe UI",-apple-system,sans-serif;font-size:16px;font-weight:700;fill:#ffd166;letter-spacing:0.08em}
+      .lbl{font-family:"Segoe UI",-apple-system,sans-serif;font-size:15px;font-weight:700;fill:#ffffff}
+      .sub{font-family:"Segoe UI",-apple-system,sans-serif;font-size:11px;fill:#bcbcc8}
+      .badge{font-family:"Segoe UI",-apple-system,sans-serif;font-size:10px;font-weight:700;fill:#ffd166;letter-spacing:0.05em}
+      .edge{stroke:#9a9aa8;stroke-width:1.8;fill:none}
+      .edge-stream{stroke:#ef476f;stroke-width:1.8;fill:none}
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="720"/>
+
+  <!-- Column headers -->
+  <text class="col" x="120" y="40" text-anchor="middle">FONTES</text>
+  <text class="col" x="360" y="40" text-anchor="middle">BRONZE · RAW</text>
+  <text class="col" x="600" y="40" text-anchor="middle">SILVER · CLEAN</text>
+  <text class="col" x="840" y="40" text-anchor="middle">GOLD · BUSINESS</text>
+  <text class="col" x="1080" y="40" text-anchor="middle">SERVING</text>
+
+  <!-- ===== FONTES ===== -->
+  <g>
+    <rect x="20" y="180" width="200" height="80" rx="10" fill="#4a3f1f" stroke="#ffd166" stroke-width="2"/>
+    <text class="lbl" x="120" y="210" text-anchor="middle">Batch · ERP</text>
+    <text class="sub" x="120" y="232" text-anchor="middle">PostgreSQL 16</text>
+    <text class="badge" x="120" y="250" text-anchor="middle">@02:00 diário</text>
+  </g>
+  <g>
+    <rect x="20" y="430" width="200" height="80" rx="10" fill="#5a1e2a" stroke="#ef476f" stroke-width="2"/>
+    <text class="lbl" x="120" y="460" text-anchor="middle">Streaming</text>
+    <text class="sub" x="120" y="482" text-anchor="middle">Redis Streams</text>
+    <text style="font-family:'Segoe UI',sans-serif;font-size:10px;font-weight:700;fill:#ef476f;letter-spacing:0.05em" x="120" y="500" text-anchor="middle">*/5 min</text>
+  </g>
+
+  <!-- ===== BRONZE ===== -->
+  <g>
+    <rect x="260" y="180" width="200" height="80" rx="10" fill="#663b18" stroke="#cd7f32" stroke-width="2"/>
+    <text class="lbl" x="360" y="210" text-anchor="middle">olist/&lt;tabela&gt;</text>
+    <text class="sub" x="360" y="232" text-anchor="middle">dt_ingest=YYYY-MM-DD</text>
+    <text class="sub" x="360" y="250" text-anchor="middle">Parquet + Snappy</text>
+  </g>
+  <g>
+    <rect x="260" y="430" width="200" height="80" rx="10" fill="#663b18" stroke="#cd7f32" stroke-width="2"/>
+    <text class="lbl" x="360" y="460" text-anchor="middle">events/</text>
+    <text class="sub" x="360" y="482" text-anchor="middle">dt=YYYY-MM-DD/hr=HH</text>
+    <text class="sub" x="360" y="500" text-anchor="middle">Parquet + Snappy</text>
+  </g>
+
+  <!-- ===== SILVER ===== -->
+  <g>
+    <rect x="500" y="220" width="200" height="240" rx="10" fill="#2a2a2a" stroke="#aaaaaa" stroke-width="2"/>
+    <text class="lbl" x="600" y="252" text-anchor="middle">stg_olist_*</text>
+    <text class="sub" x="600" y="272" text-anchor="middle">cast · dedup · null-handling</text>
+
+    <line x1="520" y1="295" x2="680" y2="295" stroke="#666" stroke-width="1"/>
+
+    <text class="lbl" x="600" y="320" text-anchor="middle">stg_events</text>
+    <text class="sub" x="600" y="340" text-anchor="middle">schema validation · sessions</text>
+
+    <line x1="520" y1="363" x2="680" y2="363" stroke="#666" stroke-width="1"/>
+
+    <text class="lbl" x="600" y="388" text-anchor="middle">int_*</text>
+    <text class="sub" x="600" y="408" text-anchor="middle">lógica compartilhada</text>
+    <text class="sub" x="600" y="428" text-anchor="middle">dbt models</text>
+  </g>
+
+  <!-- ===== GOLD ===== -->
+  <g>
+    <rect x="740" y="220" width="200" height="240" rx="10" fill="#665020" stroke="#ffd166" stroke-width="2"/>
+    <text class="lbl" x="840" y="252" text-anchor="middle">FATOS</text>
+    <text class="sub" x="840" y="272" text-anchor="middle">fct_pedidos</text>
+    <text class="sub" x="840" y="288" text-anchor="middle">fct_entregas · fct_funil</text>
+
+    <line x1="760" y1="310" x2="920" y2="310" stroke="#8a6c2a" stroke-width="1"/>
+
+    <text class="lbl" x="840" y="334" text-anchor="middle">DIMENSÕES</text>
+    <text class="sub" x="840" y="354" text-anchor="middle">dim_clientes · dim_produtos</text>
+    <text class="sub" x="840" y="370" text-anchor="middle">dim_vendedores · dim_geo</text>
+    <text class="sub" x="840" y="386" text-anchor="middle">dim_tempo · dim_sessao</text>
+    <text class="sub" x="840" y="416" text-anchor="middle" style="fill:#ffd166;font-weight:600">modelo Kimball</text>
+  </g>
+
+  <!-- ===== SERVING ===== -->
+  <g>
+    <rect x="980" y="220" width="200" height="100" rx="10" fill="#1e4a38" stroke="#06d6a0" stroke-width="2"/>
+    <text class="lbl" x="1080" y="252" text-anchor="middle">Metabase</text>
+    <text class="sub" x="1080" y="274" text-anchor="middle">5 dashboards</text>
+    <text class="sub" x="1080" y="294" text-anchor="middle">Executivo · Vendas · SLA</text>
+    <text class="sub" x="1080" y="310" text-anchor="middle">Funil · Sellers</text>
+  </g>
+  <g>
+    <rect x="980" y="360" width="200" height="80" rx="10" fill="#1e4a38" stroke="#06d6a0" stroke-width="2" stroke-dasharray="6,3"/>
+    <text class="lbl" x="1080" y="392" text-anchor="middle">FastAPI</text>
+    <text class="sub" x="1080" y="414" text-anchor="middle">endpoints opcional</text>
+    <text class="sub" x="1080" y="430" text-anchor="middle">JSON · OpenAPI auto</text>
+  </g>
+
+  <!-- ===== EDGES ===== -->
+  <!-- Fontes → Bronze (horizontais) -->
+  <path class="edge" d="M 220 220 L 260 220" marker-end="url(#arr)"/>
+  <path class="edge-stream" d="M 220 470 L 260 470" marker-end="url(#arr-stream)"/>
+
+  <!-- Bronze → Silver (curvas convergentes) -->
+  <path class="edge" d="M 460 220 C 480 220, 490 280, 500 290" marker-end="url(#arr)"/>
+  <path class="edge" d="M 460 470 C 480 470, 490 400, 500 390" marker-end="url(#arr)"/>
+
+  <!-- Silver → Gold (horizontal) -->
+  <path class="edge" d="M 700 340 L 740 340" marker-end="url(#arr)"/>
+
+  <!-- Gold → Serving -->
+  <path class="edge" d="M 940 290 C 960 290, 970 270, 980 270" marker-end="url(#arr)"/>
+  <path class="edge" d="M 940 390 C 960 390, 970 400, 980 400" marker-end="url(#arr)"/>
+
+  <!-- ===== AIRFLOW + QUALIDADE FOOTER ===== -->
+  <g>
+    <rect x="20" y="580" width="560" height="100" rx="10" fill="#3a2a4a" stroke="#b19cd9" stroke-width="2"/>
+    <text class="col" x="300" y="610" text-anchor="middle" style="font-size:14px">⚙ ORQUESTRAÇÃO · APACHE AIRFLOW</text>
+    <text class="sub" x="300" y="634" text-anchor="middle" style="font-size:12px;fill:#fff">DAG mestre @02:00 dispara ingestão batch → Silver → Gold → testes → Metabase</text>
+    <text class="sub" x="300" y="652" text-anchor="middle" style="font-size:12px;fill:#fff">DAG streaming */5min consome eventos e roda dbt incremental</text>
+    <text class="sub" x="300" y="670" text-anchor="middle" style="font-size:11px;fill:#b19cd9">LocalExecutor · ~800 MB</text>
+  </g>
+  <g>
+    <rect x="620" y="580" width="560" height="100" rx="10" fill="#1e3a4a" stroke="#4aa3df" stroke-width="2"/>
+    <text class="col" x="900" y="610" text-anchor="middle" style="font-size:14px;fill:#4aa3df">🔬 QUALIDADE · DBT TESTS + GREAT EXPECTATIONS</text>
+    <text class="sub" x="900" y="634" text-anchor="middle" style="font-size:12px;fill:#fff">dbt tests (not_null, unique, relationships) rodam após cada modelo</text>
+    <text class="sub" x="900" y="652" text-anchor="middle" style="font-size:12px;fill:#fff">Great Expectations valida distribuição e integridade cross-table</text>
+    <text class="sub" x="900" y="670" text-anchor="middle" style="font-size:11px;fill:#4aa3df">falha crítica = pipeline para antes de chegar ao dashboard</text>
+  </g>
+</svg>
