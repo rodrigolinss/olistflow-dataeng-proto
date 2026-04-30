@@ -1,6 +1,6 @@
 # Roteiro da Apresentação — OlistFlow
 
-**Duração-alvo:** 15 minutos de exposição + 5 minutos de perguntas = 20 min total (dentro da janela 10–20 min do enunciado).
+**Duração-alvo:** 15 minutos de exposição (dentro da janela 10–20 min do enunciado). **Sem rodada de perguntas** — encerramento direto.
 **Formato:** dupla, alternando fala entre as seções. Ambos os integrantes devem apresentar alguma parte (requisito explícito do enunciado).
 
 **Integrantes:**
@@ -19,8 +19,7 @@
 | 4. Arquitetura e fluxo | 3,5 min | **Vitor** | Diagrama principal; por que Medalhão |
 | 5. Tecnologias e justificativas | 3,5 min | **Rodrigo** | Stack com justificativa por etapa |
 | 6. Tradeoffs + Próximos passos | 1,5 min | **Vitor** | Honestidade sobre limites + roadmap |
-| 7. Encerramento | 0,5 min | **Rodrigo** | Convite a perguntas |
-| 8. Perguntas | 5 min | **Ambos** | Dividir por afinidade temática |
+| 7. Encerramento | 0,5 min | **Rodrigo** | Agradecimento e fim — sem abrir para perguntas |
 
 Alternativa: se preferirem dividir por "blocos" em vez de alternar, Rodrigo pega seções 1–3 (contexto, dados, domínios) e Vitor pega 4–7 (arquitetura, tecnologias, tradeoffs). Escolham o que sair mais fluido no ensaio.
 
@@ -93,35 +92,9 @@ Transição para próximos passos:
 
 ### Slide 8 — Encerramento (30 s)
 
-> "Resumindo: OlistFlow é um pipeline realista pra um marketplace brasileiro, com batch e streaming, arquitetura Medalhão, stack que cabe num notebook. Todo o material está no repositório público do GitHub — link no relatório. Bora pras perguntas."
+> "Resumindo: OlistFlow é um pipeline realista pra um marketplace brasileiro, com batch e streaming, arquitetura Medalhão, stack que cabe num notebook. Todo o material está no repositório público do GitHub — link no relatório. Obrigado!"
 
----
-
-## Estratégia para perguntas (5 min)
-
-### Perguntas prováveis e respostas curtas
-
-**"Por que não usaram Kafka?"**
-> "Kafka exigiria 2+ GB de RAM só em overhead. Redis Streams tem a mesma abstração conceitual (log imutável, consumer groups, replay) em 50 MB. Em produção seria Kafka; em protótipo didático, preservamos a semântica sem a complexidade."
-
-**"Por que Medalhão e não Data Mesh?"**
-> "Data Mesh pressupõe maturidade organizacional — múltiplos times com ownership de data products. A gente é uma dupla em um protótipo. Mas a separação por domínios que a gente desenhou na seção 3 já prepara uma evolução pra Data Mesh sem redesenho."
-
-**"DuckDB escala?"**
-> "DuckDB é single-node, escala vertical. Pro nosso volume (dezenas de MB), é mais rápido que qualquer engine distribuída. Em produção com TBs, a gente trocaria por BigQuery ou Athena — mas o dbt que a gente escreveu continuaria o mesmo, só mudaria o perfil de conexão."
-
-**"Como vocês garantem qualidade dos dados?"**
-> "Duas camadas: dbt tests rodam junto com cada modelo (`not_null`, `unique`, `relationships`, `accepted_values`) e bloqueiam o pipeline se falharem em nível crítico. Great Expectations complementa com testes de distribuição e integridade cross-table."
-
-**"O que muda se vocês forem pra cloud?"**
-> "Três coisas: Parquet local vira S3, DuckDB vira Athena ou BigQuery, Airflow local vira MWAA ou Cloud Composer. Os modelos dbt, as DAGs, os testes — tudo continua igual. É essa a virtude da arquitetura Medalhão bem construída: ela é portátil."
-
-**"Qual é o diferencial do projeto de vocês?"**
-> "Três coisas: (1) planejamento explícito de tradeoffs — a gente documenta o que cedemos e por quê; (2) stack inteiramente open-source e reprodutível em notebook modesto — qualquer colega consegue rodar; (3) arquitetura pensada pra evoluir sem redesenho, não pra impressionar agora."
-
-### Dica geral
-
-Se receberem uma pergunta técnica muito específica que não dominam: **remeter ao relatório**. "Isso a gente cobre em detalhe na seção 4.5 do relatório — se quiser posso mostrar agora ou depois da apresentação."
+Encerramento direto, sem abrir para perguntas. Cumprimentar a banca/turma e sair de cena.
 
 ---
 
@@ -131,8 +104,7 @@ Se receberem uma pergunta técnica muito específica que não dominam: **remeter
 - [ ] Confirmar que ambos apresentam alguma parte (requisito de avaliação)
 - [ ] Testar projeção dos diagramas Mermaid (renderizam bem em tela grande?)
 - [ ] Preparar backup em PDF caso a internet falhe
-- [ ] Revisar 3 perguntas mais prováveis acima — responder sem olhar
-- [ ] Combinar quem responde primeiro cada tipo de pergunta
+- [ ] Combinar transições: quem fala depois de quem em cada slide
 
 ---
 

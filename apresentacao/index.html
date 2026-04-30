@@ -369,10 +369,10 @@ flowchart TB
     M --> SHARED
     S --> SHARED
 
-    V -.reusa.-> C
-    V -.reusa.-> U
-    L -.reusa.-> U
-    M -.via order_id.-> V
+    V -. "reusa" .-> C
+    V -. "reusa" .-> U
+    L -. "reusa" .-> U
+    M -. "via order_id" .-> V
 
     classDef dom fill:#1e3a5f,stroke:#4a90e2,stroke-width:2px,color:#fff
     classDef sh fill:#4a3f1f,stroke:#ffd166,stroke-width:2px,color:#fff
@@ -586,7 +586,7 @@ flowchart TB
     AF_SCH -->|"XREADGROUP */5min"| RD
     AF_SCH -->|"dbt run · write parquet"| V_DATA
     META -->|"JDBC (read-only)"| V_DATA
-    PG -. "mount" .- V_PG
+    PG -. "mount" .-> V_PG
 
     classDef orch fill:#3a2a4a,stroke:#b19cd9,color:#fff
     classDef db fill:#3a4a1e,stroke:#7cb342,color:#fff
@@ -718,28 +718,28 @@ flowchart TB
 
         <!-- ========== SLIDE 11 — ENCERRAMENTO ========== -->
         <section class="center" data-background-gradient="radial-gradient(circle at 70% 70%, #1a1a2e 0%, #0d0d15 100%)">
-            <span class="badge">Obrigado pela atenção</span>
-            <h1 class="cover-title" style="font-size: 3.4em;">Perguntas?</h1>
-            <p class="cover-subtitle">A gente responde por afinidade temática — e o que não couber, te mandamos no repo.</p>
+            <span class="badge">Encerramento</span>
+            <h1 class="cover-title" style="font-size: 3.6em;">Obrigado!</h1>
+            <p class="cover-subtitle">OlistFlow — Parte 1 entregue.</p>
 
             <div class="presenters-grid">
                 <div class="presenter">
                     <div class="avatar a">RL</div>
                     <div class="who">
-                        <span class="role">Contexto · Dados · Stack</span>
+                        <span class="role">Apresentador</span>
                         <span class="name">Rodrigo César Lins</span>
                     </div>
                 </div>
                 <div class="presenter">
                     <div class="avatar b">VF</div>
                     <div class="who">
-                        <span class="role">Domínios · Arquitetura · Tradeoffs</span>
+                        <span class="role">Apresentador</span>
                         <span class="name">Vitor Nascimento Franco</span>
                     </div>
                 </div>
             </div>
 
-            <div class="card" style="margin: 1.4em auto 0; max-width: 620px; text-align: center;">
+            <div class="card" style="margin: 1.4em auto 0; max-width: 640px; text-align: center;">
                 <h3 style="margin: 0 0 0.4em 0;">📂 Repositório público</h3>
                 <p style="font-family: 'SF Mono', Menlo, monospace; color: var(--accent); font-size: 0.72em; word-break: break-all; margin: 0;">github.com/rodrigolinss/olistflow-dataeng-proto</p>
                 <p style="font-size: 0.55em; color: var(--muted); margin: 0.6em 0 0;">Slides em <code>/apresentacao/</code> · Relatório em <code>/docs/</code></p>
@@ -752,7 +752,7 @@ flowchart TB
             </div>
 
             <aside class="notes">
-                Tempo: 30 s. Manter postura acolhedora. Se o tempo sobrar, oferecer: "podemos mostrar algum detalhe do relatório agora ou responder perguntas — como preferirem."
+                Encerramento direto. Não abrir para perguntas. Apenas agradecer e indicar o repositório. Tempo: 30 s.
             </aside>
         </section>
 
@@ -782,6 +782,12 @@ flowchart TB
         flowchart: { curve: 'basis', padding: 10, nodeSpacing: 26, rankSpacing: 34, htmlLabels: true, useMaxWidth: true }
     });
 
+    // Save mermaid source BEFORE Reveal manipulates the DOM, so we can re-render on demand.
+    document.querySelectorAll('pre.mermaid').forEach((el, i) => {
+        el.dataset.mmdSource = el.textContent.trim();
+        el.dataset.mmdId = 'mmd-' + i;
+    });
+
     Reveal.initialize({
         hash: true,
         slideNumber: 'c/t',
@@ -798,11 +804,29 @@ flowchart TB
         plugins: [RevealHighlight, RevealNotes]
     });
 
-    function renderMermaid() {
-        try { mermaid.run({ querySelector: '.mermaid' }); } catch (e) { console.warn('mermaid:', e); }
+    // Render only the diagrams of the visible slide. Avoids rendering at width=0
+    // (which Reveal applies to off-screen slides) and gives a clear error if syntax fails.
+    async function renderMermaidIn(slide) {
+        if (!slide) return;
+        const targets = slide.querySelectorAll('pre.mermaid');
+        for (const el of targets) {
+            if (el.dataset.mmdRendered === 'true') continue;
+            const src = el.dataset.mmdSource;
+            if (!src) continue;
+            try {
+                const { svg, bindFunctions } = await mermaid.render(el.dataset.mmdId + '-svg', src);
+                el.innerHTML = svg;
+                el.dataset.mmdRendered = 'true';
+                if (bindFunctions) bindFunctions(el);
+            } catch (e) {
+                console.warn('mermaid render error:', e);
+                el.innerHTML = '<div style="color:#ef476f;padding:1em;font-family:monospace;font-size:13px;white-space:pre-wrap">Diagrama Mermaid falhou: ' + (e && e.message ? e.message : e) + '</div>';
+            }
+        }
     }
-    Reveal.on('ready', renderMermaid);
-    Reveal.on('slidechanged', renderMermaid);
+
+    Reveal.on('ready', () => renderMermaidIn(Reveal.getCurrentSlide()));
+    Reveal.on('slidechanged', (e) => renderMermaidIn(e.currentSlide));
 </script>
 
 </body>
