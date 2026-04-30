@@ -92,39 +92,58 @@
         }
 
         .reveal table {
-            font-size: 0.55em; width: 100%; margin: 0.5em 0;
+            font-size: 0.5em; width: 100%; margin: 0.4em 0;
             border-collapse: collapse; border-spacing: 0;
         }
         .reveal table th {
             color: var(--accent); border-bottom: 2px solid var(--accent);
-            padding: 0.6em 0.8em; text-align: left; font-weight: 600;
+            padding: 0.5em 0.7em; text-align: left; font-weight: 600;
         }
         .reveal table td {
-            padding: 0.5em 0.8em; border-bottom: 1px solid var(--border);
+            padding: 0.42em 0.7em; border-bottom: 1px solid var(--border);
             vertical-align: top;
         }
         .reveal table tr:hover td { background: var(--card-bg); }
 
         .reveal ul, .reveal ol { display: block; margin-left: 1em; }
-        .reveal li { margin: 0.3em 0; line-height: 1.5; }
+        .reveal li { margin: 0.25em 0; line-height: 1.45; }
         .reveal li strong { color: var(--accent); }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em; margin-top: 1em; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em; margin-top: 1em; }
+        /* prevent emoji from rendering as block-sized fallback inside li/h3 */
+        .reveal li, .reveal h3, .reveal td, .reveal th, .compare-box ul li {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont,
+                'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+        }
+        .ok-check {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 1.1em; height: 1.1em; border-radius: 4px;
+            background: rgba(6, 214, 160, 0.18); color: var(--accent-2);
+            font-weight: 700; font-size: 0.85em;
+            margin-right: 0.4em; vertical-align: -0.15em;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; margin-top: 0.8em; align-items: start; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.9em; margin-top: 0.8em; }
 
         .card {
             background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
-            padding: 1em 1.2em;
+            padding: 0.9em 1em;
         }
-        .card h3 { margin: 0 0 0.5em 0; font-size: 0.9em; }
-        .card p { margin: 0; font-size: 0.65em; color: var(--muted); line-height: 1.5; }
+        .card h3 { margin: 0 0 0.4em 0; font-size: 0.78em; line-height: 1.3; }
+        .card p { margin: 0; font-size: 0.55em; color: var(--muted); line-height: 1.5; }
 
         .stat {
-            background: linear-gradient(135deg, rgba(255, 209, 102, 0.08), rgba(6, 214, 160, 0.08));
-            border-radius: 12px; padding: 1.2em; text-align: center; border: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(255, 209, 102, 0.10), rgba(6, 214, 160, 0.10));
+            border-radius: 12px; padding: 0.9em 1em; text-align: center; border: 1px solid var(--border);
         }
-        .stat .big { font-size: 2.5em; color: var(--accent); font-weight: 700; display: block; }
-        .stat .lbl { font-size: 0.55em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        .stat .big {
+            font-size: 1.6em; color: var(--accent); font-weight: 800; display: block;
+            line-height: 1.1; white-space: nowrap; letter-spacing: -0.02em;
+        }
+        .stat .lbl {
+            font-size: 0.42em; color: var(--muted); text-transform: uppercase;
+            letter-spacing: 0.12em; margin-top: 0.3em; display: block;
+        }
 
         .bullet-lg { font-size: 0.85em; line-height: 1.7; }
         .bullet-lg li { padding-left: 0.3em; }
@@ -135,45 +154,52 @@
 
         .callout {
             border-left: 4px solid var(--accent);
-            padding: 0.8em 1.2em; margin: 1em 0;
-            background: var(--card-bg); font-size: 0.8em; font-style: italic;
+            padding: 0.7em 1.1em; margin: 0.9em 0;
+            background: var(--card-bg); font-size: 0.65em; font-style: italic;
         }
 
         .mermaid-container {
-            background: #1a1a2e; border-radius: 8px; padding: 1em;
-            max-height: 520px; overflow: auto; display: flex; justify-content: center;
+            background: #1a1a2e; border-radius: 8px; padding: 0.8em;
+            max-height: 460px; overflow: auto;
+            display: flex; justify-content: center; align-items: center;
         }
-        .mermaid { font-size: 14px !important; }
+        .mermaid-container pre.mermaid { width: 100%; text-align: center; }
+        .mermaid svg { max-width: 100%; height: auto !important; }
+        .mermaid .nodeLabel, .mermaid .edgeLabel { font-size: 13px !important; }
 
         .footer-bar {
-            position: fixed; bottom: 12px; left: 20px; right: 20px;
+            position: fixed; bottom: 8px; left: 14px; right: 14px;
             display: flex; justify-content: space-between; align-items: center;
-            font-size: 12px; color: var(--muted); z-index: 30;
-            pointer-events: none;
+            font-size: 10px; color: var(--muted); z-index: 30;
+            pointer-events: none; opacity: 0.55;
         }
         .footer-bar .brand { color: var(--accent); font-weight: 600; }
         .footer-bar .detail { font-family: 'SF Mono', Menlo, Consolas, monospace; }
 
         .two-col-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; }
-        .compare-box { border: 1px solid var(--border); border-radius: 8px; padding: 1em; background: var(--card-bg); }
+        .compare-box { border: 1px solid var(--border); border-radius: 8px; padding: 0.85em 1em; background: var(--card-bg); }
         .compare-box.good { border-color: rgba(6, 214, 160, 0.4); }
         .compare-box.limit { border-color: rgba(239, 71, 111, 0.4); }
-        .compare-box h3 { font-size: 0.85em; margin-top: 0; }
+        .compare-box h3 { font-size: 0.7em; margin-top: 0; margin-bottom: 0.4em; }
         .compare-box.good h3 { color: var(--accent-2); }
         .compare-box.limit h3 { color: var(--accent-3); }
-        .compare-box ul { font-size: 0.7em; margin-left: 0.8em; }
+        .compare-box ul { font-size: 0.55em; margin-left: 0.8em; }
+        .compare-box ul li { margin: 0.4em 0; }
 
         .ondas {
             display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.6em;
-            margin: 1em 0;
+            margin: 0.9em 0;
         }
         .onda {
-            background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
-            padding: 0.8em 0.5em; font-size: 0.55em; text-align: center;
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+            padding: 0.7em 0.5em; font-size: 0.5em; text-align: center;
         }
-        .onda .num { display: block; font-size: 1.5em; color: var(--accent); font-weight: 700; margin-bottom: 0.3em; }
-        .onda .tit { color: var(--text); font-weight: 600; margin-bottom: 0.3em; }
-        .onda .des { color: var(--muted); font-size: 0.9em; line-height: 1.3; }
+        .onda .num {
+            display: inline-block; font-size: 1.4em; color: var(--accent); font-weight: 800;
+            margin-bottom: 0.25em; line-height: 1;
+        }
+        .onda .tit { color: var(--text); font-weight: 700; margin-bottom: 0.3em; font-size: 1.05em; }
+        .onda .des { color: var(--muted); font-size: 0.85em; line-height: 1.35; }
 
         .qr-placeholder {
             display: inline-block; padding: 1.5em 2em; border-radius: 8px;
@@ -236,24 +262,26 @@
         <!-- ========== SLIDE 2 — O PROBLEMA ========== -->
         <section>
             <h2>Por que um marketplace brasileiro?</h2>
-            <div class="grid-2" style="margin-top: 1.5em;">
+
+            <div class="stat" style="display: flex; align-items: center; justify-content: center; gap: 1.2em; margin-top: 0.6em;">
+                <span class="big" style="font-size: 1.9em;">R$ 185 bi</span>
+                <span class="lbl" style="text-align: left; font-size: 0.5em;">E-commerce Brasil · 2024<br><span style="color: var(--muted); letter-spacing: 0; text-transform: none;">Marketplaces concentram a maior complexidade de dados</span></span>
+            </div>
+
+            <div class="grid-2" style="margin-top: 1em;">
                 <div>
-                    <div class="stat" style="margin-bottom: 1em;">
-                        <span class="big">R$ 185 bi</span>
-                        <span class="lbl">E-commerce Brasil · 2024</span>
-                    </div>
-                    <p style="font-size: 0.7em; color: var(--muted); margin: 0;">Marketplaces multivendedor concentram a <span class="highlight">maior complexidade de dados</span>: cada pedido envolve cliente, vendedor, meio de pagamento, operador logístico — em todos os estados, com ciclos longos de compra até avaliação.</p>
+                    <p style="font-size: 0.6em; color: var(--muted); margin: 0;">Cada pedido envolve <span class="highlight">cliente, vendedor, meio de pagamento e operador logístico</span> — em todos os estados, com ciclos longos da compra à avaliação. Os dados nascem dispersos em sistemas que não conversam.</p>
                 </div>
                 <div>
-                    <h3 style="margin-top: 0;">Três dores recorrentes</h3>
-                    <ul style="font-size: 0.75em;">
-                        <li><strong>Visão fragmentada</strong><br><span style="color: var(--muted); font-size: 0.85em;">cada equipe consulta uma fonte diferente</span></li>
-                        <li><strong>Decisões lentas</strong><br><span style="color: var(--muted); font-size: 0.85em;">sem camada analítica, "qual categoria cresceu?" leva dias</span></li>
-                        <li><strong>Sinais perdidos</strong><br><span style="color: var(--muted); font-size: 0.85em;">eventos de navegação nunca cruzam com pós-compra</span></li>
+                    <h3 style="margin: 0 0 0.4em 0; font-size: 0.78em;">Três dores recorrentes</h3>
+                    <ul style="font-size: 0.55em; margin-left: 0.8em;">
+                        <li><strong>Visão fragmentada</strong> — cada equipe consulta uma fonte diferente</li>
+                        <li><strong>Decisões lentas</strong> — "qual categoria cresceu?" leva dias</li>
+                        <li><strong>Sinais perdidos</strong> — navegação nunca cruza com pós-compra</li>
                     </ul>
                 </div>
             </div>
-            <div class="callout" style="margin-top: 1.5em;">
+            <div class="callout" style="margin-top: 0.9em;">
                 O OlistFlow ataca essas três dores com um pipeline end-to-end unificando dados operacionais (batch) e comportamentais (streaming).
             </div>
             <aside class="notes">
@@ -677,11 +705,11 @@ flowchart TB
                     <div class="des">5 dashboards Metabase · dbt docs · CI GitHub Actions</div>
                 </div>
             </div>
-            <h3 style="margin-top: 1.5em;">Critério de pronto</h3>
-            <ul style="font-size: 0.7em;">
-                <li>✅ <code>make up</code> sobe todo o stack em &lt; 5 min em máquina limpa</li>
-                <li>✅ <code>dbt build</code> roda do zero e passa em 100% dos testes</li>
-                <li>✅ Qualquer colega da sala consegue reproduzir em seu notebook em &lt; 30 min</li>
+            <h3 style="margin-top: 1.1em; font-size: 0.85em;">Critério de pronto</h3>
+            <ul style="font-size: 0.55em; list-style: none; margin-left: 0; padding-left: 0;">
+                <li><span class="ok-check">✓</span><code>make up</code> sobe todo o stack em &lt; 5 min em máquina limpa</li>
+                <li><span class="ok-check">✓</span><code>dbt build</code> roda do zero e passa em 100% dos testes</li>
+                <li><span class="ok-check">✓</span>Qualquer colega da sala consegue reproduzir em seu notebook em &lt; 30 min</li>
             </ul>
             <aside class="notes">
                 Tempo: 1,5 min. Mostrar que o planejamento é executável, não ficção. Destacar o último bullet: o teste final é "funciona na máquina do colega" — isso derruba projetos acadêmicos ambiciosos que só rodam na máquina do dono.
@@ -740,6 +768,7 @@ flowchart TB
     mermaid.initialize({
         startOnLoad: false,
         theme: 'dark',
+        securityLevel: 'loose',
         themeVariables: {
             darkMode: true,
             background: '#1a1a2e',
@@ -750,7 +779,7 @@ flowchart TB
             secondaryColor: '#4a3f1f',
             tertiaryColor: '#1e4a38'
         },
-        flowchart: { curve: 'basis', padding: 12, nodeSpacing: 30, rankSpacing: 40 }
+        flowchart: { curve: 'basis', padding: 10, nodeSpacing: 26, rankSpacing: 34, htmlLabels: true, useMaxWidth: true }
     });
 
     Reveal.initialize({
@@ -761,12 +790,19 @@ flowchart TB
         controls: true,
         progress: true,
         center: false,
+        width: 1280,
+        height: 800,
+        margin: 0.04,
+        minScale: 0.2,
+        maxScale: 2.0,
         plugins: [RevealHighlight, RevealNotes]
     });
 
-    // Render Mermaid diagrams after reveal is initialized and on slide changes
-    Reveal.on('ready', () => { mermaid.run({ querySelector: '.mermaid' }); });
-    Reveal.on('slidechanged', () => { mermaid.run({ querySelector: '.mermaid' }); });
+    function renderMermaid() {
+        try { mermaid.run({ querySelector: '.mermaid' }); } catch (e) { console.warn('mermaid:', e); }
+    }
+    Reveal.on('ready', renderMermaid);
+    Reveal.on('slidechanged', renderMermaid);
 </script>
 
 </body>
