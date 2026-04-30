@@ -65,30 +65,31 @@
         }
         .presenters-grid {
             display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1em; margin: 1.6em auto 0; max-width: 720px;
+            gap: 0.8em; margin: 1.2em auto 0; max-width: 880px;
         }
         .presenter {
-            display: flex; align-items: center; gap: 0.9em;
+            display: flex; align-items: center; gap: 0.7em;
             background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 14px; padding: 0.85em 1em;
+            border-radius: 12px; padding: 0.7em 0.9em;
             text-align: left;
         }
         .presenter .avatar {
-            width: 44px; height: 44px; flex: 0 0 44px;
+            width: 38px; height: 38px; flex: 0 0 38px;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.55em; font-weight: 700; letter-spacing: 0.04em;
+            font-size: 0.45em; font-weight: 700; letter-spacing: 0.04em;
             color: #0d0d15;
         }
         .presenter .avatar.a { background: linear-gradient(135deg, #ffd166, #f4a261); }
         .presenter .avatar.b { background: linear-gradient(135deg, #06d6a0, #4aa3df); }
-        .presenter .who { display: flex; flex-direction: column; gap: 0.15em; min-width: 0; }
+        .presenter .who { display: flex; flex-direction: column; gap: 0.1em; min-width: 0; flex: 1; }
         .presenter .who .role {
-            color: var(--muted); font-size: 0.42em; text-transform: uppercase;
+            color: var(--muted); font-size: 0.34em; text-transform: uppercase;
             letter-spacing: 0.12em; font-weight: 600;
         }
         .presenter .who .name {
-            color: var(--text); font-size: 0.62em; font-weight: 600; line-height: 1.2;
+            color: var(--text); font-size: 0.46em; font-weight: 600; line-height: 1.15;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
         .reveal table {
@@ -158,14 +159,12 @@
             background: var(--card-bg); font-size: 0.65em; font-style: italic;
         }
 
-        .mermaid-container {
-            background: #1a1a2e; border-radius: 8px; padding: 0.8em;
-            max-height: 460px; overflow: auto;
+        .diagram {
+            background: #ffffff; border-radius: 10px; padding: 0.6em;
             display: flex; justify-content: center; align-items: center;
+            max-height: 540px; overflow: hidden;
         }
-        .mermaid-container pre.mermaid { width: 100%; text-align: center; }
-        .mermaid svg { max-width: 100%; height: auto !important; }
-        .mermaid .nodeLabel, .mermaid .edgeLabel { font-size: 13px !important; }
+        .diagram img { max-width: 100%; max-height: 520px; height: auto; display: block; }
 
         .footer-bar {
             position: fixed; bottom: 8px; left: 14px; right: 14px;
@@ -344,44 +343,9 @@
         <!-- ========== SLIDE 4 — DOMÍNIOS ========== -->
         <section>
             <h2>6 Domínios + Serviços Compartilhados</h2>
-            <div class="mermaid-container" style="max-height: 460px;">
-                <pre class="mermaid">
-flowchart TB
-    subgraph SHARED["🔧 Serviços Compartilhados"]
-        SH1[Bronze Raw Store]
-        SH2[Airflow]
-        SH3[dbt docs]
-        SH4[Qualidade]
-        SH5[Metabase]
-    end
-
-    V["💰 Vendas<br/>Pedidos · Itens · Pagamentos"]
-    C["📦 Catálogo<br/>Produtos · Categorias"]
-    U["👤 Clientes<br/>Cadastro · Reviews · RFM"]
-    L["🚚 Logística<br/>Entregas · Geo · SLA"]
-    M["📣 Marketing<br/>Eventos · Funil · Sessões"]
-    S["🏪 Sellers<br/>Vendedores · Scorecards"]
-
-    V --> SHARED
-    C --> SHARED
-    U --> SHARED
-    L --> SHARED
-    M --> SHARED
-    S --> SHARED
-
-    V -. "reusa" .-> C
-    V -. "reusa" .-> U
-    L -. "reusa" .-> U
-    M -. "via order_id" .-> V
-
-    classDef dom fill:#1e3a5f,stroke:#4a90e2,stroke-width:2px,color:#fff
-    classDef sh fill:#4a3f1f,stroke:#ffd166,stroke-width:2px,color:#fff
-    class V,C,U,L,M,S dom
-    class SHARED sh
-                </pre>
-            </div>
-            <p style="font-size: 0.6em; color: var(--muted); margin-top: 0.8em;">
-                <span class="highlight">DDD aplicado:</span> cada domínio tem ownership claro. Dimensões conformadas (<code>dim_clientes</code>) são reusadas em múltiplos domínios — reuso sem duplicação, princípio de Kimball.
+            <div class="diagram"><img src="img/d3-dfd-dominios.svg" alt="DFD por domínio"></div>
+            <p style="font-size: 0.55em; color: var(--muted); margin-top: 0.6em; text-align: center;">
+                <span class="highlight">DDD aplicado:</span> cada domínio tem ownership claro. Dimensões conformadas (<code>dim_clientes</code>) são reusadas em múltiplos domínios — reuso sem duplicação (Kimball).
             </p>
             <aside class="notes">
                 Tempo: 2,5 min. Destacar: (1) organização espelha times reais de marketplace; (2) conformed dimensions como exemplo de reuso; (3) preparação pra eventual Data Mesh sem precisar redesenhar.
@@ -391,50 +355,9 @@ flowchart TB
         <!-- ========== SLIDE 5 — ARQUITETURA (FLUXO) ========== -->
         <section>
             <h2>Arquitetura Medalhão + Lambda light</h2>
-            <div class="mermaid-container" style="max-height: 480px;">
-                <pre class="mermaid">
-flowchart LR
-    ERP[("Postgres<br/>Olist ERP")] -->|"SELECT · JDBC"| B1["Python + pyarrow<br/><b>@02:00 diário</b>"]
-    EVT["Simulador<br/>clickstream"] -->|"XADD"| B2["Redis Streams<br/>+ consumer<br/><b>*/5 min</b>"]
-
-    B1 --> BR1["🥉 Bronze<br/>parquet particionado<br/>dt_ingest=YYYY-MM-DD"]
-    B2 --> BR2["🥉 Bronze<br/>events/dt=/hr="]
-
-    BR1 --> SV["🥈 Silver<br/>stg_* · int_*<br/>cast · dedup · joins"]
-    BR2 --> SV
-
-    SV --> GD["🥇 Gold<br/>fct_pedidos · fct_funil<br/>dim_clientes · dim_produtos"]
-
-    GD --> MB["Metabase<br/>5 dashboards"]
-    GD --> API["FastAPI<br/>opcional"]
-
-    AF(("Airflow<br/>LocalExecutor")) -. "@02:00" .-> B1
-    AF -. "*/5 min" .-> B2
-    AF -. "dbt run" .-> SV
-    AF -. "dbt run" .-> GD
-
-    DBT["dbt tests<br/>+ Great Expectations"] -. "bloqueia inválidos" .-> SV
-    DBT -. "bloqueia inválidos" .-> GD
-
-    classDef src fill:#5a1e2a,stroke:#ef476f,color:#fff
-    classDef bronze fill:#663b18,stroke:#cd7f32,color:#fff
-    classDef silver fill:#444,stroke:#aaa,color:#fff
-    classDef gold fill:#665020,stroke:#ffd166,color:#fff
-    classDef serve fill:#1e4a38,stroke:#06d6a0,color:#fff
-    classDef orch fill:#3a2a4a,stroke:#b19cd9,color:#fff
-    classDef qual fill:#1e3a4a,stroke:#4aa3df,color:#fff
-
-    class ERP,EVT src
-    class BR1,BR2 bronze
-    class SV silver
-    class GD gold
-    class MB,API serve
-    class AF orch
-    class DBT qual
-                </pre>
-            </div>
-            <p style="font-size: 0.65em; text-align: center; margin-top: 0.6em;">
-                <span class="highlight-green">Bronze</span> captura · <span class="highlight" style="color: #c0c0c0;">Silver</span> limpa · <span class="highlight">Gold</span> modela · cadência anotada no próprio fluxo
+            <div class="diagram"><img src="img/d1-end-to-end.svg" alt="Fluxo end-to-end"></div>
+            <p style="font-size: 0.55em; text-align: center; margin-top: 0.5em;">
+                <span class="highlight-green">Bronze</span> captura · <span style="color: #c0c0c0; font-weight: 600;">Silver</span> limpa · <span class="highlight">Gold</span> modela · cadência anotada no próprio fluxo
             </p>
             <aside class="notes">
                 Tempo: 3,5 min. Coração da apresentação. Explicar: (1) Bronze é imutável = reversibilidade; (2) Silver aplica cast, dedup, validação; (3) Gold é modelo dimensional (Kimball); (4) Airflow coordena com dois ritmos — batch @02:00 e streaming */5min; (5) testes dbt+GE validam automaticamente antes de avançar.
@@ -444,50 +367,8 @@ flowchart LR
         <!-- ========== SLIDE 5b — ORQUESTRAÇÃO AIRFLOW ========== -->
         <section>
             <h2>Como Airflow coordena — DAGs e schedules</h2>
-            <div class="mermaid-container" style="max-height: 500px;">
-                <pre class="mermaid">
-flowchart TB
-    CRON_D["CRON · 0 2 * * *<br/><b>@02:00 diário</b>"] --> M0["start"]
-    CRON_S["CRON · */5 * * * *<br/><b>a cada 5 min</b>"] --> S1["poll_redis<br/>XREADGROUP"]
-
-    subgraph MASTER["DAG mestre — olistflow_daily"]
-        direction TB
-        M0 --> M1["ingest_all"] --> M2["dbt_silver"] --> M3["dbt_gold"] --> M4["dbt_tests"] --> M5["ge_checks"] --> M6["refresh_metabase"] --> M7["end"]
-    end
-
-    subgraph DOMAINS["DAGs por domínio"]
-        direction LR
-        D_VEN["vendas_daily"]
-        D_CAT["catalogo_daily"]
-        D_CLI["clientes_daily"]
-        D_LOG["logistica_daily"]
-        D_SEL["sellers_daily"]
-    end
-
-    subgraph STREAM["marketing_events_5min"]
-        direction TB
-        S1 --> S2["batch_to_parquet"] --> S3["dbt_incremental<br/>stg_events"] --> S4["ge_realtime_checks"]
-    end
-
-    M1 --> D_VEN
-    M1 --> D_CAT
-    M1 --> D_CLI
-    M1 --> D_LOG
-    M1 --> D_SEL
-
-    M4 -. "falha crítica" .-> M7
-    M5 -. "falha crítica" .-> M7
-
-    classDef master fill:#1e4a38,stroke:#06d6a0,color:#fff
-    classDef dom fill:#1e3a5f,stroke:#4a90e2,color:#fff
-    classDef stream fill:#4a3f1f,stroke:#ffd166,color:#fff
-
-    class MASTER master
-    class DOMAINS dom
-    class STREAM stream
-                </pre>
-            </div>
-            <p style="font-size: 0.65em; text-align: center; margin-top: 0.6em;">
+            <div class="diagram"><img src="img/d2-airflow-dags.svg" alt="DAGs Airflow"></div>
+            <p style="font-size: 0.55em; text-align: center; margin-top: 0.5em;">
                 Dois ritmos independentes: <span class="highlight-green">trem diário @02:00</span> (sequencial) + <span class="highlight">streaming */5min</span> (fire-and-forget).
             </p>
             <aside class="notes">
@@ -557,55 +438,8 @@ flowchart TB
         <!-- ========== SLIDE 7b — DEPLOYMENT DOCKER ========== -->
         <section>
             <h2>Como roda na máquina — Docker Compose</h2>
-            <div class="mermaid-container" style="max-height: 500px;">
-                <pre class="mermaid">
-flowchart TB
-    USR["👤 Usuário<br/>browser"]
-
-    subgraph HOST["💻 Host · olistflow_net"]
-        direction TB
-
-        AF_WEB["airflow-webserver<br/>:8080"]
-        AF_SCH["airflow-scheduler"]
-        AF_WEB -.-> AF_SCH
-
-        PG["olist-postgres<br/>:5432 · 200 MB"]
-        RD["olist-redis<br/>:6379 · 50 MB"]
-        META["olist-metabase<br/>:3000 · 800 MB"]
-        SIMPY["olist-simulator<br/>80 MB"]
-
-        V_DATA[("./data/<br/>bronze · duckdb")]
-        V_PG[("pg_data")]
-    end
-
-    USR -->|"localhost:8080"| AF_WEB
-    USR -->|"localhost:3000"| META
-
-    SIMPY -->|"XADD"| RD
-    AF_SCH -->|"SELECT"| PG
-    AF_SCH -->|"XREADGROUP */5min"| RD
-    AF_SCH -->|"dbt run · write parquet"| V_DATA
-    META -->|"JDBC (read-only)"| V_DATA
-    PG -. "mount" .-> V_PG
-
-    classDef orch fill:#3a2a4a,stroke:#b19cd9,color:#fff
-    classDef db fill:#3a4a1e,stroke:#7cb342,color:#fff
-    classDef cache fill:#4a1e1e,stroke:#ef5350,color:#fff
-    classDef bi fill:#1e4a38,stroke:#06d6a0,color:#fff
-    classDef sim fill:#4a3f1f,stroke:#ffd166,color:#fff
-    classDef vol fill:#2a2a3a,stroke:#888,color:#fff
-    classDef usr fill:#1e3a5f,stroke:#4a90e2,color:#fff
-
-    class AF_WEB,AF_SCH orch
-    class PG db
-    class RD cache
-    class META bi
-    class SIMPY sim
-    class V_DATA,V_PG vol
-    class USR usr
-                </pre>
-            </div>
-            <p style="font-size: 0.65em; text-align: center; margin-top: 0.6em;">
+            <div class="diagram"><img src="img/d4-deployment-docker.svg" alt="Deployment Docker"></div>
+            <p style="font-size: 0.55em; text-align: center; margin-top: 0.5em;">
                 5 containers na mesma bridge + volumes locais para código (hot-reload) e dados (persistência).
                 <span class="highlight-green">~2,6 GB em regime</span>, cabe em notebook de 8 GB.
             </p>
@@ -719,8 +553,8 @@ flowchart TB
         <!-- ========== SLIDE 11 — ENCERRAMENTO ========== -->
         <section class="center" data-background-gradient="radial-gradient(circle at 70% 70%, #1a1a2e 0%, #0d0d15 100%)">
             <span class="badge">Encerramento</span>
-            <h1 class="cover-title" style="font-size: 3.6em;">Obrigado!</h1>
-            <p class="cover-subtitle">OlistFlow — Parte 1 entregue.</p>
+            <h1 class="cover-title" style="font-size: 2.8em;">Obrigado!</h1>
+            <p class="cover-subtitle" style="font-size: 0.85em;">OlistFlow — Parte 1 entregue.</p>
 
             <div class="presenters-grid">
                 <div class="presenter">
@@ -762,32 +596,8 @@ flowchart TB
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
 
 <script>
-    mermaid.initialize({
-        startOnLoad: false,
-        theme: 'dark',
-        securityLevel: 'loose',
-        themeVariables: {
-            darkMode: true,
-            background: '#1a1a2e',
-            primaryColor: '#2a3a5a',
-            primaryTextColor: '#f8f9fa',
-            primaryBorderColor: '#4a90e2',
-            lineColor: '#adb5bd',
-            secondaryColor: '#4a3f1f',
-            tertiaryColor: '#1e4a38'
-        },
-        flowchart: { curve: 'basis', padding: 10, nodeSpacing: 26, rankSpacing: 34, htmlLabels: true, useMaxWidth: true }
-    });
-
-    // Save mermaid source BEFORE Reveal manipulates the DOM, so we can re-render on demand.
-    document.querySelectorAll('pre.mermaid').forEach((el, i) => {
-        el.dataset.mmdSource = el.textContent.trim();
-        el.dataset.mmdId = 'mmd-' + i;
-    });
-
     Reveal.initialize({
         hash: true,
         slideNumber: 'c/t',
@@ -803,30 +613,6 @@ flowchart TB
         maxScale: 2.0,
         plugins: [RevealHighlight, RevealNotes]
     });
-
-    // Render only the diagrams of the visible slide. Avoids rendering at width=0
-    // (which Reveal applies to off-screen slides) and gives a clear error if syntax fails.
-    async function renderMermaidIn(slide) {
-        if (!slide) return;
-        const targets = slide.querySelectorAll('pre.mermaid');
-        for (const el of targets) {
-            if (el.dataset.mmdRendered === 'true') continue;
-            const src = el.dataset.mmdSource;
-            if (!src) continue;
-            try {
-                const { svg, bindFunctions } = await mermaid.render(el.dataset.mmdId + '-svg', src);
-                el.innerHTML = svg;
-                el.dataset.mmdRendered = 'true';
-                if (bindFunctions) bindFunctions(el);
-            } catch (e) {
-                console.warn('mermaid render error:', e);
-                el.innerHTML = '<div style="color:#ef476f;padding:1em;font-family:monospace;font-size:13px;white-space:pre-wrap">Diagrama Mermaid falhou: ' + (e && e.message ? e.message : e) + '</div>';
-            }
-        }
-    }
-
-    Reveal.on('ready', () => renderMermaidIn(Reveal.getCurrentSlide()));
-    Reveal.on('slidechanged', (e) => renderMermaidIn(e.currentSlide));
 </script>
 
 </body>
